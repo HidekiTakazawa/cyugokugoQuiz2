@@ -18,7 +18,9 @@
     .dataNone {
       display: none;
     }
-
+    .member {
+      margin-bottom: 20px;
+    }
     .member span {
 
       border: 1px solid pink;
@@ -29,17 +31,43 @@
 
     .hanyuDisplay {
       display: block;
+      font-weight: bold;
     }
 
     .hanyuNoDisplay {
       display: none;
     }
+
     .japaneseDisplay {
       display: block;
     }
 
     .japaneseNoDisplay {
       display: none;
+    }
+
+    #check-next {
+      background-color: cyan;
+      border-radius: 20%;
+      width: 100px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer;
+      user-select: none;
+      margin-left: 40px;
+    }
+    .divSpeak {
+      background-color: cyan;
+      border-radius: 20%;
+      width: 100px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      user-select: none;
+
     }
   </style>
 </head>
@@ -52,9 +80,8 @@
 
   </div>
   <p id="comment"></p>
-  <button id="check">チェック</button>
-  <button id="next">次の問題</button>
-
+  <div id="check-next">チェック</div>
+  
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script>
@@ -81,6 +108,7 @@
   </script>
   <script>
     let cssIndex = 0;
+    let swButton = false;  // false: check  true: next
     const questions = [
       ['A', '我的爱好是看电影', '私の趣味は映画を見ることです。', '电影', '看', '是', '我', '的', '爱好'],
       ['B', '我喜欢吃中国菜', '私は中国料理を食べるのが好きです。。', '中国菜', '我', '喜欢', '吃'],
@@ -168,10 +196,11 @@
       p.setAttribute('class', 'japanese japaneseNoDisplay');
       divContent.appendChild(p);
       //
-      button = document.createElement('button');
-      button.textContent = 'Speak';
-      button.setAttribute('onclick', 'speakData2()');
-      divContent.appendChild(button);
+      divSpeak = document.createElement('div');
+      divSpeak.textContent = 'Speak';
+      divSpeak.setAttribute('onclick', 'speakData2()');
+      divSpeak.setAttribute('class', 'divSpeak');
+      divContent.appendChild(divSpeak);
       //
       div = document.createElement('div');
       div.setAttribute('class', 'answer member connectedSortable');
@@ -198,82 +227,160 @@
 
     }
     //
-    const check = document.getElementById('check');
-    check.addEventListener('click', () => {
-      const comment = document.getElementById('comment');
-      const hanyuGroup = document.querySelectorAll('.hanyu');
-      hanyuGroup[cssIndex].classList.add('hanyuDisplay');
-      hanyuGroup[cssIndex].classList.remove('hanyuNoDisplay');
-      const hanyu = questions[cssIndex][1];
-      console.log(hanyu);
-      //
-      if (questions[cssIndex][0] === 'B') {
+    const checknext = document.getElementById('check-next');
+    checknext.addEventListener('click', () => {
+      if (swButton) {
+        swButton = false;
+        checknext.textContent = 'チェック';
+        const hanyuGroup = document.querySelectorAll('.hanyu');
         const japaneseGroup = document.querySelectorAll('.japanese');
-        japaneseGroup[cssIndex].classList.add('japaneseDisplay');
-        japaneseGroup[cssIndex].classList.remove('japaneseNoDisplay');
+        //
+        const comment = document.getElementById('comment');
+        comment.textContent = "";
+        var classElement = document.getElementsByClassName('dataContent');
+        cssIndex++;
+        if (cssIndex === classElement.length) {
+          cssIndex = 0;
+        }
 
-      }
-      //
-      const answers = document.querySelectorAll('.answer');
+        for (let i = 0; i < classElement.length; i++) {
+          if (i === cssIndex) {
+            classElement[i].classList.add("dataDisplay");
+            classElement[i].classList.remove("dataNone");
 
-      span = answers[cssIndex].getElementsByTagName('span');
+          } else {
+            classElement[i].classList.add("dataNone");
+            classElement[i].classList.remove("dataDisplay");
 
-      let answerString = '';
-      let i;
-      for (i = 1; i < span.length; i++) {
-        answerString = answerString + span[i].textContent;
+          }
+          if (hanyuGroup[i].classList.contains('hanyuDisplay')) {
+            hanyuGroup[i].classList.remove('hanyuDisplay');
+            hanyuGroup[i].classList.add('hanyuNoDisplay');
+          }
+          if (japaneseGroup[i].classList.contains('japaneseDisplay')) {
+            japaneseGroup[i].classList.remove('japaneseDisplay');
+            japaneseGroup[i].classList.add('japaneseNoDisplay');
+          }
 
-      }
-      console.log(answerString);
+        }
 
-
-      if (answerString === hanyu) {
-
-        comment.textContent = '大変よくできました。';
-        console.log('OK');
       } else {
-        comment.textContent = '間違っています！　もっとしっかり勉強して。';
-        console.log('wrong');
+        swButton = true;
+        checknext.textContent = '次の問題';
+        const comment = document.getElementById('comment');
+        const hanyuGroup = document.querySelectorAll('.hanyu');
+        hanyuGroup[cssIndex].classList.add('hanyuDisplay');
+        hanyuGroup[cssIndex].classList.remove('hanyuNoDisplay');
+        const hanyu = questions[cssIndex][1];
+        console.log(hanyu);
+        //
+        if (questions[cssIndex][0] === 'B') {
+          const japaneseGroup = document.querySelectorAll('.japanese');
+          japaneseGroup[cssIndex].classList.add('japaneseDisplay');
+          japaneseGroup[cssIndex].classList.remove('japaneseNoDisplay');
+
+        }
+        //
+        const answers = document.querySelectorAll('.answer');
+
+        span = answers[cssIndex].getElementsByTagName('span');
+
+        let answerString = '';
+        let i;
+        for (i = 1; i < span.length; i++) {
+          answerString = answerString + span[i].textContent;
+
+        }
+        console.log(answerString);
+
+
+        if (answerString === hanyu) {
+
+          comment.textContent = '大変よくできました。';
+          console.log('OK');
+        } else {
+          comment.textContent = '間違っています！　もっとしっかり勉強して。';
+          console.log('wrong');
+        }
       }
-
-
-
     });
     //
-    const next = document.getElementById('next');
-    next.addEventListener('click', () => {
-      const hanyuGroup = document.querySelectorAll('.hanyu');
-      const japaneseGroup = document.querySelectorAll('.japanese');
-      //
-      const comment = document.getElementById('comment');
-      comment.textContent = "";
-      var classElement = document.getElementsByClassName('dataContent');
-      cssIndex++;
-      if (cssIndex === classElement.length) {
-        cssIndex = 0;
-      }
+    // const check = document.getElementById('check');
+    // check.addEventListener('click', () => {
+    //   const comment = document.getElementById('comment');
+    //   const hanyuGroup = document.querySelectorAll('.hanyu');
+    //   hanyuGroup[cssIndex].classList.add('hanyuDisplay');
+    //   hanyuGroup[cssIndex].classList.remove('hanyuNoDisplay');
+    //   const hanyu = questions[cssIndex][1];
+    //   console.log(hanyu);
+    //   //
+    //   if (questions[cssIndex][0] === 'B') {
+    //     const japaneseGroup = document.querySelectorAll('.japanese');
+    //     japaneseGroup[cssIndex].classList.add('japaneseDisplay');
+    //     japaneseGroup[cssIndex].classList.remove('japaneseNoDisplay');
 
-      for (let i = 0; i < classElement.length; i++) {
-        if (i === cssIndex) {
-          classElement[i].classList.add("dataDisplay");
-          classElement[i].classList.remove("dataNone");
+    //   }
+    //   //
+    //   const answers = document.querySelectorAll('.answer');
 
-        } else {
-          classElement[i].classList.add("dataNone");
-          classElement[i].classList.remove("dataDisplay");
+    //   span = answers[cssIndex].getElementsByTagName('span');
 
-        }
-        if (hanyuGroup[i].classList.contains('hanyuDisplay')) {
-          hanyuGroup[i].classList.remove('hanyuDisplay');
-          hanyuGroup[i].classList.add('hanyuNoDisplay');
-        }
-        if (japaneseGroup[i].classList.contains('japaneseDisplay')) {
-          japaneseGroup[i].classList.remove('japaneseDisplay');
-          japaneseGroup[i].classList.add('japaneseNoDisplay');
-        }
+    //   let answerString = '';
+    //   let i;
+    //   for (i = 1; i < span.length; i++) {
+    //     answerString = answerString + span[i].textContent;
 
-      }
-    });
+    //   }
+    //   console.log(answerString);
+
+
+    //   if (answerString === hanyu) {
+
+    //     comment.textContent = '大変よくできました。';
+    //     console.log('OK');
+    //   } else {
+    //     comment.textContent = '間違っています！　もっとしっかり勉強して。';
+    //     console.log('wrong');
+    //   }
+
+
+
+    // });
+    //
+    // const next = document.getElementById('next');
+    // next.addEventListener('click', () => {
+    //   const hanyuGroup = document.querySelectorAll('.hanyu');
+    //   const japaneseGroup = document.querySelectorAll('.japanese');
+    //   //
+    //   const comment = document.getElementById('comment');
+    //   comment.textContent = "";
+    //   var classElement = document.getElementsByClassName('dataContent');
+    //   cssIndex++;
+    //   if (cssIndex === classElement.length) {
+    //     cssIndex = 0;
+    //   }
+
+    //   for (let i = 0; i < classElement.length; i++) {
+    //     if (i === cssIndex) {
+    //       classElement[i].classList.add("dataDisplay");
+    //       classElement[i].classList.remove("dataNone");
+
+    //     } else {
+    //       classElement[i].classList.add("dataNone");
+    //       classElement[i].classList.remove("dataDisplay");
+
+    //     }
+    //     if (hanyuGroup[i].classList.contains('hanyuDisplay')) {
+    //       hanyuGroup[i].classList.remove('hanyuDisplay');
+    //       hanyuGroup[i].classList.add('hanyuNoDisplay');
+    //     }
+    //     if (japaneseGroup[i].classList.contains('japaneseDisplay')) {
+    //       japaneseGroup[i].classList.remove('japaneseDisplay');
+    //       japaneseGroup[i].classList.add('japaneseNoDisplay');
+    //     }
+
+    //   }
+    // });
     function speakData(param1, param2) {
 
       // if (param1 instanceof HTMLTableCellElement) {
@@ -289,29 +396,29 @@
     }
     function speakDataX(param1, param2) {
 
-      
+
       const td = param1;
       let answerGroup = document.querySelectorAll('.answer');;
       let questionGroup = document.querySelectorAll('.question');;
       let answerSpans = answerGroup[cssIndex];
       let questionSpans = questionGroup[cssIndex];
-     
+
       var uttr = new SpeechSynthesisUtterance(td.textContent);
       uttr.lang = "zh-CN"
       speechSynthesis.cancel();
       speechSynthesis.speak(uttr);
       if (param1.parentElement.classList.contains('answer')) {
         questionSpans.appendChild(param1);
-        
-        
-        
+
+
+
       } else {
         answerSpans.appendChild(param1);
 
 
       }
 
-      
+
 
     }
     function speakData2() {
