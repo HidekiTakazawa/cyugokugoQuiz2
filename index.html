@@ -109,13 +109,14 @@
     .inputNoDisplay {
       display: none;
     }
+
     #comment {
       font-size: 32px;
     }
 
     #check-next {
       background-color: cyan;
-      border-radius: 20%;
+      border-radius: 8px;
       width: 100px;
       height: 40px;
       text-align: center;
@@ -123,6 +124,16 @@
       cursor: pointer;
       user-select: none;
       margin-left: 40px;
+      box-shadow: 0 4px #7a0000;
+    }
+
+    #check-next:hover {
+      opacity: 0.8;
+    }
+
+    #check-next:active {
+      box-shadow: 0 1px #7a0000;
+      transform: translateY(3px);
     }
 
     .divSpeak {
@@ -154,7 +165,7 @@
 
     #reTry {
       background-color: pink;
-      border-radius: 10%;
+      border-radius: 8px;
       width: 400px;
       height: 40px;
       text-align: center;
@@ -162,7 +173,16 @@
       cursor: pointer;
       user-select: none;
       margin-top: 30px;
-      
+      box-shadow: 0 4px #7a0000;
+
+    }
+
+    #reTry:hover {
+      opacity: 0.8;
+    }
+    #reTry:active {
+      box-shadow: 0 1px #7a0000;
+      transform: translateY(3px);
     }
   </style>
 </head>
@@ -897,12 +917,12 @@
       container = document.createElement('div');
       container.setAttribute('id', 'container');
       main.appendChild(container);
-      
+
       renderQuestions(questions);
       iniCSSSet();
       cssIndex = 0;
       swButton = false;
-      
+
     }
 
 
