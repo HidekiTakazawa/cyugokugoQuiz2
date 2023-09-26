@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>中国語クイズ</title>
   <style>
+    * {
+      font-size: 20px;
+    }
     .header {
       position: fixed;
       top: 0px;
@@ -153,6 +156,7 @@
       padding-left: 30px;
       padding-top: 120px;
       display: block;
+      animation: 03s fadeIn;
     }
 
     .totalGradeDisplay {
@@ -180,9 +184,24 @@
     #reTry:hover {
       opacity: 0.8;
     }
+
     #reTry:active {
       box-shadow: 0 1px #7a0000;
       transform: translateY(3px);
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+
+      }
+
+      100% {
+        opacity: 1;
+        transform: none;
+      }
+
     }
   </style>
 </head>
