@@ -10,6 +10,7 @@
     * {
       font-size: 20px;
     }
+
     .header {
       position: fixed;
       top: 0px;
@@ -443,6 +444,7 @@
     }
     function renderQuestions(questions) {
       questions.forEach((question) => {
+        question_Shuffle(question);
         if (question[0] === 'A') {
           renderA_Question(question);
         } else if (question[0] === 'B') {
@@ -487,7 +489,39 @@
 
     }
 
+    function question_Shuffle(question) {
+      //
+      const shuffleArray = (array) => {
+        const cloneArray = [...array]
 
+        for (let i = cloneArray.length - 1; i >= 0; i--) {
+          let rand = Math.floor(Math.random() * (i + 1))
+          // 配列の要素の順番を入れ替える
+          let tmpStorage = cloneArray[i]
+          cloneArray[i] = cloneArray[rand]
+          cloneArray[rand] = tmpStorage
+        }
+
+        return cloneArray
+      }
+      //
+      let i = 0;
+      let inTab = [];
+      let outTab = [];
+      for (i = 0; i < question.length; i++) {
+        if (question[4 + i] == '') {
+          break;
+        }
+        inTab[i] = question[4 + i];
+      }
+      outTab = shuffleArray(inTab);
+      for (i = 0; i < outTab.length; i++) {
+        question[4 + i] = outTab[i];
+      }
+      
+
+
+    }
 
 
 
