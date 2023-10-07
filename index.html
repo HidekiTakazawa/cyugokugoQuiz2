@@ -686,8 +686,17 @@
           totalGrade.classList.add('totalGradeDisplay');
           totalGrade.classList.remove('totalGradeNoDisplay');
           let div = document.createElement('div');
-          div.textContent = `正答数は${seikaiSu}でした。`;
+          let mondaisu = questions.length - 1;
+          let ritsu = seikaiSu * 100 / mondaisu;
+          div.textContent = `正答数は${seikaiSu}, 正答率は${ritsu.toFixed(1)}でした。`;
           totalGrade.appendChild(div);
+
+          if (seikaiSu === mondaisu) {
+            div = document.createElement('div');
+            div.textContent = '恭喜恭喜!!';
+            totalGrade.appendChild(div);
+            speakData(div);
+          }
           div = document.createElement('div');
           div.setAttribute('id', 'reTry');
           div.setAttribute('onclick', 'setReTry()');
