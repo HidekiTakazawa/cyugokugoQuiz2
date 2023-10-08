@@ -117,6 +117,10 @@
     #comment {
       font-size: 32px;
     }
+    #baiFen {
+      font-size: 32px;
+      color: red;
+    }
 
     #check-next {
       background-color: cyan;
@@ -694,6 +698,7 @@
           if (seikaiSu === mondaisu) {
             div = document.createElement('div');
             div.textContent = '恭喜恭喜!!';
+            div.setAttribute('id', 'baiFen');
             totalGrade.appendChild(div);
             speakData(div);
           }
