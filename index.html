@@ -26,6 +26,7 @@
       padding-left: 100px;
 
     }
+
     .question-no {
       font-size: 16px;
     }
@@ -119,6 +120,7 @@
     #comment {
       font-size: 32px;
     }
+
     #baiFen {
       font-size: 32px;
       color: red;
@@ -159,6 +161,7 @@
       box-shadow: 0 4px #7a0000;
 
     }
+
     .divSpeak:active {
       box-shadow: 0 1px #7a0000;
       transform: translateY(3px);
@@ -220,7 +223,7 @@
 
 <body>
   <div class="header">
-    <p>中国語クイズ</p>
+    <p>中国語クイズ　　　　<button id="timer">時間計測</button></p>
 
     <div class="divFlex">
       <div class="sheetSelect">
@@ -308,7 +311,15 @@
     let checknext;
     let comment;
     let seikaiSu;    // シートごとの正解数
-    
+    let startTime;
+    let endTime;
+    const timer = document.getElementById('timer');
+    timer.addEventListener('click', () => {
+      startTime = Date.now(); // 開始時間
+      timer.style.display = 'none';
+
+
+    });
     main = document.getElementById('main');
     container = document.getElementById('container');
     // document.addEventListener('DOMContentLoaded', function () {
@@ -471,7 +482,7 @@
           renderX_Question(question);
         } else if (question[idxPattern] === 'C') {
           renderX_Question(question);
-          
+
 
 
         } else if (question[idxPattern] === 'D') {
@@ -480,11 +491,11 @@
         } else if (question[idxPattern] === 'E') {
           renderX_Question(question);
 
-        
+
         } else if (question[idxPattern] === 'F') {
           renderX_Question(question);
 
-        
+
         } else if (question[idxPattern] === 'G') {
           renderX_Question(question);
 
@@ -493,7 +504,7 @@
 
 
       });
-
+      timer.style.display = 'inline-block';
       comment = document.createElement('p');
       comment.setAttribute('id', 'comment');
       container.appendChild(comment);
@@ -546,7 +557,7 @@
       for (i = 0; i < outTab.length; i++) {
         question[idxSpan + i] = outTab[i];
       }
-      
+
 
 
     }
@@ -554,11 +565,11 @@
 
 
 
-    
-    
+
+
     // 
     function renderX_Question(question) {
-      // const container = document.getElementById('main');
+      startTime = 0;
       container = document.getElementById('container');
       let div, p, span, divContent;
       divContent = document.createElement('dir');
@@ -571,7 +582,7 @@
       divContent.appendChild(p);
 
       //
-      
+
       p = document.createElement('p');
       p.textContent = question[idxPinyin];
       if (question[idxPattern] === 'D') {
@@ -630,7 +641,7 @@
       div.setAttribute('class', 'answer member connectedSortable');
       divContent.appendChild(div);
       span = document.createElement('span');
-      if (question[idxPattern] === 'C' ||question[idxPattern] === 'F' || question[idxPattern] === 'G') {
+      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G') {
         span.textContent = '';
 
       } else {
@@ -644,7 +655,7 @@
       divContent.appendChild(div);
       span = document.createElement('span');
       if (question[idxPattern] === 'F' || question[idxPattern] === 'G') {
-        
+
         span.textContent = '';
       } else {
         span.textContent = '問題：　';
@@ -657,9 +668,9 @@
             span.setAttribute('onclick', 'speakDataX(this)')
             // span.setAttribute('onmousedown', 'speakData(this)')
             div.appendChild(span);
-  
+
           }
-  
+
         }
 
       }
@@ -685,8 +696,8 @@
 
 
     }
-    
-    
+
+
     //
 
     function checkNext() {
@@ -711,6 +722,24 @@
           let ritsu = seikaiSu * 100 / mondaisu;
           div.textContent = `正答数は${seikaiSu}, 正答率は${ritsu.toFixed(1)}でした。`;
           totalGrade.appendChild(div);
+          //
+          if (startTime > 0) {
+            endTime = Date.now(); // 終了時間
+            let syoriTime = endTime - startTime;
+            console.log(syoriTime);
+            let syoriMinute = Math.floor(syoriTime / 60000);
+            if (syoriMinute < 1) {
+              syoriMinute = 0;
+            }
+            let syoriSecond = syoriTime % 60000;
+            syoriSecond = syoriSecond / 1000;
+          
+            div = document.createElement('div');
+            div.textContent = `処理時間は${syoriMinute}分${syoriSecond.toFixed(1)}秒でした。`;
+            totalGrade.appendChild(div);
+
+          }
+          
 
           if (seikaiSu === mondaisu) {
             div = document.createElement('div');
@@ -726,6 +755,9 @@
           totalGrade.appendChild(div);
 
           cssIndex = 0;
+          //
+          
+          //
           return;
         }
 
@@ -789,10 +821,10 @@
               comment.textContent = '好！赞👍';
             } else {
               comment.textContent = '错×　再加油！！';
-  
+
             }
             speakData(comment);
-            
+
 
           } else {
             if (inputHanyu.value === hanyu) {
@@ -800,7 +832,7 @@
               comment.textContent = '好！赞👍';
             } else {
               comment.textContent = '错×　再加油！！';
-  
+
             }
             speakData(comment);
 
@@ -844,20 +876,20 @@
 
     }
     // 
-    function  pattertnF_Judge(inputHanyu,  cssIndex) {
+    function pattertnF_Judge(inputHanyu, cssIndex) {
       let matchOn = true;
       let hanyu = questions[cssIndex][idxHanyu];
       if (inputHanyu === hanyu) {
         return matchOn;
       }
       matchOn = false;
-      for (let i = idxSpan; i < questions[cssIndex].length; i++)  {
+      for (let i = idxSpan; i < questions[cssIndex].length; i++) {
         if (questions[cssIndex][i] !== '') {
           if (inputHanyu === questions[cssIndex][i]) {
             matchOn = true;
             return matchOn;
-  
-  
+
+
           }
 
         }
