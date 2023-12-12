@@ -204,6 +204,13 @@
       box-shadow: 0 1px #7a0000;
       transform: translateY(3px);
     }
+    #onseiStart {
+      display: inline-block;
+      cursor: pointer;
+      border-color: pink;
+      border-radius: 8px;
+      box-shadow: 0 4px #7a0000;
+    }
 
     @keyframes fadeIn {
       0% {
@@ -313,6 +320,68 @@
     let seikaiSu;    // シートごとの正解数
     let startTime;
     let endTime;
+    let hAnswer; //　Hタイプの最終音声入力
+    let micBtn;  // 音声ボタン
+    //
+    // Declare webkitSpeechRecognition
+    window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+    var recognition = new webkitSpeechRecognition();
+
+    // Web Speech API Configuration
+    // Language
+    recognition.lang = 'zh-CN';
+    // Show Progress
+    recognition.interimResults = true;
+    // Continuous recognition
+    recognition.continuous = true;
+
+    //
+    // let onseiStart = document.getElementById('onseiStart');
+
+    // let show_result = document.getElementById('show_result');
+    recognition.onsoundstart = function () {
+      document.getElementById('status').innerHTML = "Recognizing";
+    };
+    recognition.onnomatch = function () {
+      document.getElementById('status').innerHTML = "Try again";
+    };
+    recognition.onerror = function () {
+      document.getElementById('status').innerHTML = "ERROR";
+    };
+    recognition.onsoundend = function () {
+      document.getElementById('status').innerHTML = "Stopped";
+    };
+    function fncOnseiNyuryoku() {
+      micBtn.style.display = 'none';
+      recognition.start();
+      this.disabled = true;
+
+    }
+    recognition.onresult = function (event) {
+      var results = event.results;
+      // show_result.innerHTML = '<div>' + results[0][0].transcript + '</div>';
+      
+      for (var i = event.resultIndex; i < results.length; i++) {
+        if (results[i].isFinal) {
+          
+          show_result.innerHTML += '<div>' + results[i][0].transcript + '</div>';
+          
+        } else {
+          hAnswer = results[i][0].transcript;
+
+        }
+          
+       
+    }
+  }
+    
+    // onseiStart.addEventListener('click', () =>  {
+    //   // Start recognition
+    //   recognition.start();
+    //   this.disabled = true;
+    //   // stop_btn.disabled = false;
+    // });
+    //
     const timer = document.getElementById('timer');
     timer.addEventListener('click', () => {
       startTime = Date.now(); // 開始時間
@@ -499,6 +568,10 @@
         } else if (question[idxPattern] === 'G') {
           renderX_Question(question);
 
+
+        } else if (question[idxPattern] === 'H') {
+          renderX_Question(question);
+
         }
 
 
@@ -571,7 +644,7 @@
     function renderX_Question(question) {
       startTime = 0;
       container = document.getElementById('container');
-      let div, p, span, divContent;
+      let div, p, span, divContent, button, small;
       divContent = document.createElement('dir');
       divContent.setAttribute('class', 'dataContent');
       container.appendChild(divContent);
@@ -585,7 +658,7 @@
 
       p = document.createElement('p');
       p.textContent = question[idxPinyin];
-      if (question[idxPattern] === 'D') {
+      if (question[idxPattern] === 'D' || question[idxPattern] === 'H') {
         p.setAttribute('class', 'pinyin');
 
       } else {
@@ -596,7 +669,7 @@
       //
       p = document.createElement('p');
       p.textContent = question[idxHanyu];
-      if (question[idxPattern] === 'E') {
+      if (question[idxPattern] === 'E' || question[idxPattern] === 'H') {
 
         p.setAttribute('class', 'hanyu');
         p.setAttribute('onclick', 'speakData(this)');
@@ -611,7 +684,7 @@
       //
       p = document.createElement('p');
       p.textContent = question[idxRiyu];
-      if (question[idxPattern] === 'A' || question[idxPattern] === 'F') {
+      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H') {
         p.setAttribute('class', 'japanese');
         divContent.appendChild(p);
 
@@ -629,7 +702,7 @@
       }
 
       //
-      if (question[idxPattern] === 'B' || question[idxPattern] === 'G') {
+      if (question[idxPattern] === 'B' || question[idxPattern] === 'G' || question[idxPattern] === 'H') {
         divSpeak = document.createElement('div');
         divSpeak.textContent = 'Speak';
         divSpeak.setAttribute('onclick', 'speakData2()');
@@ -641,7 +714,7 @@
       div.setAttribute('class', 'answer member connectedSortable');
       divContent.appendChild(div);
       span = document.createElement('span');
-      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G') {
+      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H') {
         span.textContent = '';
 
       } else {
@@ -654,7 +727,7 @@
       div.setAttribute('class', 'question member connectedSortable');
       divContent.appendChild(div);
       span = document.createElement('span');
-      if (question[idxPattern] === 'F' || question[idxPattern] === 'G') {
+      if (question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H') {
 
         span.textContent = '';
       } else {
@@ -685,6 +758,23 @@
         input.setAttribute('maxlength', '40');
         input.setAttribute('size', '40');
         div.appendChild(input);
+      } else if (question[idxPattern] === 'H') {
+        micBtn = document.createElement('button');
+        micBtn.setAttribute('id', 'onseiStart');
+        micBtn.textContent = '音声入力';
+        micBtn.style.display = 'inline-block';
+        micBtn.setAttribute('onclick', 'fncOnseiNyuryoku()');
+        divContent.appendChild(micBtn);
+        small = document.createElement('small');
+        small.setAttribute('id', 'status');
+        divContent.appendChild(small);
+        div = document.createElement('div');
+        div.setAttribute('id', 'show_result');
+        divContent.appendChild(div);
+
+        show_result = document.getElementById('show_result');
+
+
 
       } else {
         //
@@ -733,13 +823,13 @@
             }
             let syoriSecond = syoriTime % 60000;
             syoriSecond = syoriSecond / 1000;
-          
+
             div = document.createElement('div');
             div.textContent = `処理時間は${syoriMinute}分${syoriSecond.toFixed(1)}秒でした。`;
             totalGrade.appendChild(div);
 
           }
-          
+
 
           if (seikaiSu === mondaisu) {
             div = document.createElement('div');
@@ -756,7 +846,7 @@
 
           cssIndex = 0;
           //
-          
+
           //
           return;
         }
@@ -839,6 +929,20 @@
           }
 
           //
+        } else if (questions[cssIndex][idxPattern] === 'H') {
+          recognition.stop();
+          if (hanyu === hAnswer) {
+            seikaiSu++;
+            comment.textContent = '好！赞👍';
+          } else {
+            comment.textContent = '错×　再加油！！';
+
+          }
+          speakData(comment);
+
+
+
+
 
         } else {
           const answers = document.querySelectorAll('.answer');
@@ -862,7 +966,7 @@
 
           if (answerString === correctAnswer) {
 
-            comment.textContent = '好！赞👍。';
+            comment.textContent = '好！赞👍';
             seikaiSu++;
             console.log('OK');
           } else {
