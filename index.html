@@ -204,6 +204,7 @@
       box-shadow: 0 1px #7a0000;
       transform: translateY(3px);
     }
+
     #onseiStart {
       display: inline-block;
       cursor: pointer;
@@ -345,9 +346,11 @@
     recognition.onnomatch = function () {
       document.getElementById('status').innerHTML = "Try again";
     };
-    recognition.onerror = function () {
+    recognition.onerror = function (event) {
       document.getElementById('status').innerHTML = "ERROR";
+      console.log("Speech recognition error detected: " + event.error); console.log("Additional information: " + event.message);
     };
+
     recognition.onsoundend = function () {
       document.getElementById('status').innerHTML = "Stopped";
     };
@@ -360,21 +363,21 @@
     recognition.onresult = function (event) {
       var results = event.results;
       // show_result.innerHTML = '<div>' + results[0][0].transcript + '</div>';
-      
+
       for (var i = event.resultIndex; i < results.length; i++) {
         if (results[i].isFinal) {
-          
+
           show_result.innerHTML += '<div>' + results[i][0].transcript + '</div>';
-          
-        } else {
+
           hAnswer = results[i][0].transcript;
+        } else {
 
         }
-          
-       
+
+
+      }
     }
-  }
-    
+
     // onseiStart.addEventListener('click', () =>  {
     //   // Start recognition
     //   recognition.start();
