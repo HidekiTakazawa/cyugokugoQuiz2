@@ -51,7 +51,7 @@
     }
 
     .dataContent {
-      padding-top: 80px;
+      padding-top: 130px;
 
       display: block;
     }
@@ -79,6 +79,8 @@
     .hanyu {
       display: block;
       font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 0;
 
     }
 
@@ -94,6 +96,8 @@
     .pinyin {
       display: block;
       font-weight: bold;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .pinyinDisplay {
@@ -104,9 +108,17 @@
     .pinyinNoDisplay {
       display: none;
     }
+    .japanese {
+      display: block;
+      
+      margin-top: 0;
+      margin-bottom: 0;
 
+    }
     .japaneseDisplay {
       display: block;
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .japaneseNoDisplay {
@@ -205,12 +217,15 @@
       transform: translateY(3px);
     }
 
-    #onseiStart {
+    .onseiStart {
       display: inline-block;
       cursor: pointer;
       border-color: pink;
       border-radius: 8px;
       box-shadow: 0 4px #7a0000;
+    }
+    .status {
+      font-size: 14px;
     }
 
     @keyframes fadeIn {
@@ -310,6 +325,11 @@
     const idxRiyu = 4;
     const idxSpan = 5;
     //
+    // 。　？　定数定義
+    const constWenhao = '？';
+    const constWenhao2 = '?';
+    const constKuten = '。';
+    
     let cssIndex = 0;
 
     let swButton = false;  // false: check  true: next
@@ -323,6 +343,12 @@
     let endTime;
     let hAnswer; //　Hタイプの最終音声入力
     let micBtn;  // 音声ボタン
+    let wStatus;  // 音声のstatus
+    let wShowResult;  // 音声の出力結果
+
+
+
+
     //
     // Declare webkitSpeechRecognition
     window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
@@ -341,33 +367,45 @@
 
     // let show_result = document.getElementById('show_result');
     recognition.onsoundstart = function () {
-      document.getElementById('status').innerHTML = "Recognizing";
+      
+      wStatus.innerHTML = "Recognizing";
+      // document.getElementsByClassName('dataDisplay').querySelector('.status').innerHTML = "Recognizing";
     };
     recognition.onnomatch = function () {
-      document.getElementById('status').innerHTML = "Try again";
+      // document.getElementById('status').innerHTML = "Try again";
+      wStatus.innerHTML = "Try again";
     };
     recognition.onerror = function (event) {
-      document.getElementById('status').innerHTML = "ERROR";
+      // document.getElementById('status').innerHTML = "ERROR";
+      wStatus.innerHTML = "ERROR";
       console.log("Speech recognition error detected: " + event.error); console.log("Additional information: " + event.message);
     };
 
     recognition.onsoundend = function () {
-      document.getElementById('status').innerHTML = "Stopped";
+      // document.getElementById('status').innerHTML = "Stopped";
+      wStatus.innerHTML = "Stopped";
     };
-    function fncOnseiNyuryoku() {
-      micBtn.style.display = 'none';
+    function fncOnseiNyuryoku(para1) {
+      var classDataDisplay = document.getElementsByClassName('dataDisplay');
+      witem0 = classDataDisplay.item(0);
+      var wchild = witem0.children;
+      wStatus = wchild.item(8);
+      wShowResult = wchild.item(9);
+      
+      para1.style.display = 'none';
       recognition.start();
-      this.disabled = true;
+      // this.disabled = true;
 
     }
     recognition.onresult = function (event) {
+      
       var results = event.results;
       // show_result.innerHTML = '<div>' + results[0][0].transcript + '</div>';
 
       for (var i = event.resultIndex; i < results.length; i++) {
         if (results[i].isFinal) {
 
-          show_result.innerHTML += '<div>' + results[i][0].transcript + '</div>';
+          wShowResult.innerHTML += '<div>' + results[i][0].transcript + '</div>';
 
           hAnswer = results[i][0].transcript;
         } else {
@@ -763,19 +801,19 @@
         div.appendChild(input);
       } else if (question[idxPattern] === 'H') {
         micBtn = document.createElement('button');
-        micBtn.setAttribute('id', 'onseiStart');
+        micBtn.setAttribute('class', 'onseiStart');
         micBtn.textContent = '音声入力';
         micBtn.style.display = 'inline-block';
-        micBtn.setAttribute('onclick', 'fncOnseiNyuryoku()');
+        micBtn.setAttribute('onclick', 'fncOnseiNyuryoku(this)');
         divContent.appendChild(micBtn);
         small = document.createElement('small');
-        small.setAttribute('id', 'status');
+        small.setAttribute('class', 'status');
         divContent.appendChild(small);
         div = document.createElement('div');
-        div.setAttribute('id', 'show_result');
+        div.setAttribute('class', 'show_result');
         divContent.appendChild(div);
 
-        show_result = document.getElementById('show_result');
+        show_result = document.querySelector('.show_result');
 
 
 
@@ -934,7 +972,8 @@
           //
         } else if (questions[cssIndex][idxPattern] === 'H') {
           recognition.stop();
-          if (hanyu === hAnswer) {
+          let [whanyu, whAnswer] = hanyuHosei(hanyu, hAnswer);
+          if (whanyu === whAnswer) {
             seikaiSu++;
             comment.textContent = '好！赞👍';
           } else {
@@ -980,6 +1019,29 @@
         }
         //
       }
+
+    }
+    // Hパターン　？　。補正
+    function hanyuHosei(hanyu, hAnswer) {
+      let whanyu = hanyu;
+      let whAnswer = hAnswer;
+      if (hanyu.charAt(hanyu.length - 1) === constWenhao || 
+        hanyu.charAt(hanyu.length - 1) === constWenhao2 ||
+        hanyu.charAt(hanyu.length - 1) === constKuten) {
+          whanyu = hanyu.slice(0,  hanyu.length - 1);
+    }
+    //
+    if (hAnswer.charAt(hAnswer.length - 1) === constWenhao || 
+        hAnswer.charAt(hAnswer.length - 1) === constWenhao2 ||
+        hAnswer.charAt(hAnswer.length - 1) === constKuten) {
+          whAnswer = hAnswer.slice(0, hAnswer.length - 1);
+    }
+    // console.log(`hanyu=${hanyu}`);
+    // console.log(`whanyu=${whanyu}`);
+    // console.log(`hAnswer=${hAnswer}`);
+    // console.log(`whAnswer=${whAnswer}`);
+    return [whanyu, whAnswer];
+    
 
     }
     // 
