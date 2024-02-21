@@ -81,6 +81,7 @@
       font-weight: bold;
       margin-top: 0;
       margin-bottom: 0;
+      cursor: pointer;
 
     }
 
@@ -108,13 +109,15 @@
     .pinyinNoDisplay {
       display: none;
     }
+
     .japanese {
       display: block;
-      
+
       margin-top: 0;
       margin-bottom: 0;
 
     }
+
     .japaneseDisplay {
       display: block;
       margin-top: 0;
@@ -129,6 +132,29 @@
       display: none;
     }
 
+    .spanBack1 {
+      background-color: black;
+      color: black;
+    }
+    .spanBack2 {
+      background-color: red;
+      color: red;
+    }
+    .spanBack3 {
+      background-color: pink;
+      color: pink;
+    }
+    .spanBack4 {
+      background-color: yellow;
+      color: yellow;
+    }
+    .spanBackCansel {
+      color: black;
+      background-color: transparent;
+    }
+    .pFontSize {
+      font-size: 12px;
+    }
     #comment {
       font-size: 32px;
     }
@@ -224,6 +250,7 @@
       border-radius: 8px;
       box-shadow: 0 4px #7a0000;
     }
+
     .status {
       font-size: 14px;
     }
@@ -329,7 +356,7 @@
     const constWenhao = '？';
     const constWenhao2 = '?';
     const constKuten = '。';
-    
+    const cstKanma = "，";
     let cssIndex = 0;
 
     let swButton = false;  // false: check  true: next
@@ -367,27 +394,27 @@
 
     // let show_result = document.getElementById('show_result');
     recognition.onsoundstart = function () {
-      
+
       wStatus.innerHTML = "Recognizing";
-      
+
       // document.getElementsByClassName('dataDisplay').querySelector('.status').innerHTML = "Recognizing";
     };
     recognition.onnomatch = function () {
       // document.getElementById('status').innerHTML = "Try again";
       wStatus.innerHTML = "Try again";
-      fncOnseiNyuryokuRetry();
+      // fncOnseiNyuryokuRetry();
     };
     recognition.onerror = function (event) {
       // document.getElementById('status').innerHTML = "ERROR";
       wStatus.innerHTML = "ERROR";
       console.log("Speech recognition error detected: " + event.error); console.log("Additional information: " + event.message);
-      fncOnseiNyuryokuRetry();
+      // fncOnseiNyuryokuRetry();
     };
 
     recognition.onsoundend = function () {
       // document.getElementById('status').innerHTML = "Stopped";
       wStatus.innerHTML = "Stopped";
-      
+
     };
     function fncOnseiNyuryoku(para1) {
       var classDataDisplay = document.getElementsByClassName('dataDisplay');
@@ -395,29 +422,29 @@
       var wchild = witem0.children;
       wStatus = wchild.item(8);
       wShowResult = wchild.item(9);
-      
+
       para1.style.display = 'none';
       recognition.start();
       // this.disabled = true;
 
     }
-    function fncOnseiNyuryokuRetry() {
-      var classDataDisplay = document.getElementsByClassName('dataDisplay');
-      var witem0 = classDataDisplay.item(0);
-      var wchild = witem0.children;
-      var wonseiButton = wchild.item(7);
-      wonseiButton.textContent = '再挑戦';
-      wonseiButton.style.display = 'inline-block';
-     var wStatus = wchild.item(8);
-    //  wStatus.textContent = '';
-     var  wShowResult = wchild.item(9);
-     wShowResult.textContent = '';
-      
+    // function fncOnseiNyuryokuRetry() {
+    //   var classDataDisplay = document.getElementsByClassName('dataDisplay');
+    //   var witem0 = classDataDisplay.item(0);
+    //   var wchild = witem0.children;
+    //   var wonseiButton = wchild.item(7);
+    //   wonseiButton.textContent = '再挑戦';
+    //   wonseiButton.style.display = 'inline-block';
+    //   var wStatus = wchild.item(8);
+    //   //  wStatus.textContent = '';
+    //   var wShowResult = wchild.item(9);
+    //   wShowResult.textContent = '';
 
 
-    }
+
+    // }
     recognition.onresult = function (event) {
-      
+
       var results = event.results;
       // show_result.innerHTML = '<div>' + results[0][0].transcript + '</div>';
 
@@ -436,11 +463,11 @@
     }
 
     // onseiStart.addEventListener('click', () =>  {
-    //   // Start recognition
-    //   recognition.start();
-    //   this.disabled = true;
-    //   // stop_btn.disabled = false;
-    // });
+    //    // Start recognition
+    //    recognition.start();
+    //    this.disabled = true;
+    //    // stop_btn.disabled = false;
+    //  });
     //
     const timer = document.getElementById('timer');
     timer.addEventListener('click', () => {
@@ -485,14 +512,27 @@
         speechSynthesis.speak(uttr);
 
       }
+
       if (param1.parentElement.classList.contains('answer')) {
         questionSpans.appendChild(param1);
 
 
 
       } else {
-        answerSpans.appendChild(param1);
+        if (quizPattern === 'I' || quizPattern === 'J') {
+          console.log(answerSpans.children.length);
+          if (answerSpans.children.length > 1) {
+            questionSpans.appendChild(answerSpans.children[1]);
 
+          }
+          answerSpans.appendChild(param1);
+
+        } else {
+
+          answerSpans.appendChild(param1);
+
+
+        }
 
       }
 
@@ -564,7 +604,8 @@
     getFromGAS();//起動時のデータ取得
 
     //----------- 以下、関数定義--------------------------
-
+    // return ContentService.createTextOutput(JSON.stringify(allData));
+    // したものを読み込んでいる。
     function getFromGAS() {
 
       $.ajax({
@@ -605,31 +646,23 @@
     function renderQuestions(questions) {
       questions.forEach((question) => {
         question_Shuffle(question);
-        if (question[idxPattern] === 'A') {
-          renderX_Question(question);
-        } else if (question[idxPattern] === 'B') {
-          renderX_Question(question);
-        } else if (question[idxPattern] === 'C') {
+        if (question[idxPattern] === 'A' || question[idxPattern] === 'B') {
           renderX_Question(question);
 
-
-
-        } else if (question[idxPattern] === 'D') {
-          renderX_Question(question);
-
-        } else if (question[idxPattern] === 'E') {
+        } else if (question[idxPattern] === 'C' || question[idxPattern] === 'D') {
           renderX_Question(question);
 
 
-        } else if (question[idxPattern] === 'F') {
+
+        } else if (question[idxPattern] === 'E' || question[idxPattern] === 'F') {
+          renderX_Question(question);
+
+        } else if (question[idxPattern] === 'G' || question[idxPattern] === 'H') {
           renderX_Question(question);
 
 
-        } else if (question[idxPattern] === 'G') {
-          renderX_Question(question);
 
-
-        } else if (question[idxPattern] === 'H') {
+        } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
           renderX_Question(question);
 
         }
@@ -718,7 +751,7 @@
 
       p = document.createElement('p');
       p.textContent = question[idxPinyin];
-      if (question[idxPattern] === 'D' || question[idxPattern] === 'H') {
+      if (question[idxPattern] === 'D' || question[idxPattern] === 'H' || question[idxPattern] === 'I') {
         p.setAttribute('class', 'pinyin');
 
       } else {
@@ -729,7 +762,7 @@
       //
       p = document.createElement('p');
       p.textContent = question[idxHanyu];
-      if (question[idxPattern] === 'E' || question[idxPattern] === 'H') {
+      if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I') {
 
         p.setAttribute('class', 'hanyu');
         p.setAttribute('onclick', 'speakData(this)');
@@ -744,7 +777,7 @@
       //
       p = document.createElement('p');
       p.textContent = question[idxRiyu];
-      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H') {
+      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J') {
         p.setAttribute('class', 'japanese');
         divContent.appendChild(p);
 
@@ -757,6 +790,14 @@
       if (question[idxPattern] === 'C') {
         p = document.createElement('p');
         p.textContent = 'ピンインを漢字に直して並べ替え正しい文章にしてください。';
+        divContent.appendChild(p);
+
+      }
+      //
+      if (question[idxPattern] === 'I' || question[idxPattern] === 'J' ) {
+        p = document.createElement('p');
+        p.textContent = '問題のブロックをクリックして発音が同じものを選んでください。';
+        p.setAttribute('class', 'pFontSize');
         divContent.appendChild(p);
 
       }
@@ -794,9 +835,16 @@
         span.textContent = '問題：　';
         div.appendChild(span);
         let i;
+        let spanX = 0;
         for (i = idxSpan; i < question.length; i++) {
           if (question[i] !== '') {
             span = document.createElement('span');
+            if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
+              spanX++;
+              span.setAttribute('class', `spanBack${spanX}`);
+              
+              
+            }
             span.textContent = question[i];
             span.setAttribute('onclick', 'speakDataX(this)')
             // span.setAttribute('onmousedown', 'speakData(this)')
@@ -942,6 +990,10 @@
         const comment = document.getElementById('comment');
         const hanyuGroup = document.querySelectorAll('.hanyu');
         const pinyinGroup = document.querySelectorAll('.pinyin');
+        const spanBack1 = document.querySelectorAll('.spanBack1');
+        const spanBack2 = document.querySelectorAll('.spanBack2');
+        const spanBack3 = document.querySelectorAll('.spanBack3');
+        const spanBack4 = document.querySelectorAll('.spanBack4');
         if (questions[cssIndex][idxPattern] !== 'E') {
           hanyuGroup[cssIndex].classList.add('hanyuDisplay');
           hanyuGroup[cssIndex].classList.remove('hanyuNoDisplay');
@@ -951,6 +1003,22 @@
           pinyinGroup[cssIndex].classList.remove('pinyinNoDisplay');
 
         }
+        if (questions[cssIndex][idxPattern] === 'I' || questions[cssIndex][idxPattern] === 'J') {
+          //
+          spanBack1[cssIndex].classList.add('spanBackCansel');
+          spanBack1[cssIndex].classList.remove('spacBack1');
+          //
+          spanBack2[cssIndex].classList.add('spanBackCansel');
+          spanBack2[cssIndex].classList.remove('spacBack2');
+          //
+          spanBack3[cssIndex].classList.add('spanBackCansel');
+          spanBack3[cssIndex].classList.remove('spacBack3');
+          //
+          spanBack4[cssIndex].classList.add('spanBackCansel');
+          spanBack4[cssIndex].classList.remove('spacBack4');
+
+        }
+
         const hanyu = questions[cssIndex][idxHanyu];
         const pinyin = questions[cssIndex][idxPinyin];
         console.log(hanyu);
@@ -1043,24 +1111,27 @@
     // Hパターン　？　。補正
     function hanyuHosei(hanyu, hAnswer) {
       let whanyu = hanyu;
+      
       let whAnswer = hAnswer;
-      if (hanyu.charAt(hanyu.length - 1) === constWenhao || 
+      if (hanyu.charAt(hanyu.length - 1) === constWenhao ||
         hanyu.charAt(hanyu.length - 1) === constWenhao2 ||
         hanyu.charAt(hanyu.length - 1) === constKuten) {
-          whanyu = hanyu.slice(0,  hanyu.length - 1);
-    }
-    //
-    if (hAnswer.charAt(hAnswer.length - 1) === constWenhao || 
+        whanyu = hanyu.slice(0, hanyu.length - 1);
+      }
+      let whanyu2 = whanyu.split(cstKanma);
+      whanyu = whanyu2.join('');
+      //
+      if (hAnswer.charAt(hAnswer.length - 1) === constWenhao ||
         hAnswer.charAt(hAnswer.length - 1) === constWenhao2 ||
         hAnswer.charAt(hAnswer.length - 1) === constKuten) {
-          whAnswer = hAnswer.slice(0, hAnswer.length - 1);
-    }
-    // console.log(`hanyu=${hanyu}`);
-    // console.log(`whanyu=${whanyu}`);
-    // console.log(`hAnswer=${hAnswer}`);
-    // console.log(`whAnswer=${whAnswer}`);
-    return [whanyu, whAnswer];
-    
+        whAnswer = hAnswer.slice(0, hAnswer.length - 1);
+      }
+      // console.log(`hanyu=${hanyu}`);
+      // console.log(`whanyu=${whanyu}`);
+      // console.log(`hAnswer=${hAnswer}`);
+      // console.log(`whAnswer=${whAnswer}`);
+      return [whanyu, whAnswer];
+
 
     }
     // 
