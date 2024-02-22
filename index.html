@@ -11,6 +11,7 @@
       font-size: 20px;
     }
 
+
     .header {
       position: fixed;
       top: 0px;
@@ -132,29 +133,81 @@
       display: none;
     }
 
+
     .spanBack1 {
       background-color: black;
+
       color: black;
     }
+
     .spanBack2 {
       background-color: red;
+
       color: red;
     }
+
     .spanBack3 {
       background-color: pink;
+
       color: pink;
     }
+
     .spanBack4 {
       background-color: yellow;
+
       color: yellow;
     }
+
     .spanBackCansel {
       color: black;
       background-color: transparent;
+     
     }
+    .spanBackCansel::after {
+      display: none;
+      
+    }
+    
+
+    .spanBack1:after {
+
+
+      color: white;
+
+      content: 'A';
+      z-index: 289;
+    }
+    .spanBack2:after {
+
+
+      color: white;
+
+      content: 'B';
+      z-index: 289;
+    }
+    .spanBack3:after {
+
+
+      color: white;
+
+      content: 'C';
+      z-index: 289;
+    }
+    .spanBack4:after {
+
+
+      color: blue;
+
+      content: 'D';
+      z-index: 289;
+    }
+
+
+
     .pFontSize {
       font-size: 12px;
     }
+
     #comment {
       font-size: 32px;
     }
@@ -794,7 +847,7 @@
 
       }
       //
-      if (question[idxPattern] === 'I' || question[idxPattern] === 'J' ) {
+      if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
         p = document.createElement('p');
         p.textContent = '問題のブロックをクリックして発音が同じものを選んでください。';
         p.setAttribute('class', 'pFontSize');
@@ -842,8 +895,8 @@
             if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
               spanX++;
               span.setAttribute('class', `spanBack${spanX}`);
-              
-              
+
+
             }
             span.textContent = question[i];
             span.setAttribute('onclick', 'speakDataX(this)')
@@ -1111,7 +1164,7 @@
     // Hパターン　？　。補正
     function hanyuHosei(hanyu, hAnswer) {
       let whanyu = hanyu;
-      
+
       let whAnswer = hAnswer;
       if (hanyu.charAt(hanyu.length - 1) === constWenhao ||
         hanyu.charAt(hanyu.length - 1) === constWenhao2 ||
