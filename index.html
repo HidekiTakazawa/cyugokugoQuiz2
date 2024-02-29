@@ -75,6 +75,7 @@
       border-radius: 10%;
       display: inline-block;
       margin-right: 10px;
+      cursor: pointer;
     }
 
     .hanyu {
@@ -129,6 +130,22 @@
       display: none;
     }
 
+    .japaneseGroupX {
+      display: flex;
+    }
+    .japaneseGroup {
+      margin: 0;
+    }
+
+    .japaneseKnone {
+      display: none;
+    }
+
+    .japaneseKBlock {
+      display: block;
+      margin: 0;
+    }
+
     .inputNoDisplay {
       display: none;
     }
@@ -161,13 +178,14 @@
     .spanBackCansel {
       color: black;
       background-color: transparent;
-     
+
     }
+
     .spanBackCansel::after {
       display: none;
-      
+
     }
-    
+
 
     .spanBack1:after {
 
@@ -177,6 +195,7 @@
       content: 'A';
       z-index: 289;
     }
+
     .spanBack2:after {
 
 
@@ -185,6 +204,7 @@
       content: 'B';
       z-index: 289;
     }
+
     .spanBack3:after {
 
 
@@ -193,6 +213,7 @@
       content: 'C';
       z-index: 289;
     }
+
     .spanBack4:after {
 
 
@@ -271,6 +292,9 @@
 
     .totalGradeNoDisplay {
       display: none;
+    }
+    #comment {
+      margin: 5px 2px;
     }
 
     #reTry {
@@ -425,7 +449,8 @@
     let micBtn;  // 音声ボタン
     let wStatus;  // 音声のstatus
     let wShowResult;  // 音声の出力結果
-
+    let kNihongo1;
+    let kNihongo2;
 
 
 
@@ -572,7 +597,7 @@
 
 
       } else {
-        if (quizPattern === 'I' || quizPattern === 'J') {
+        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K') {
           console.log(answerSpans.children.length);
           if (answerSpans.children.length > 1) {
             questionSpans.appendChild(answerSpans.children[1]);
@@ -715,7 +740,7 @@
 
 
 
-        } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
+        } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K') {
           renderX_Question(question);
 
         }
@@ -828,17 +853,38 @@
 
       }
       //
+      let divJapanese;
+      divJapanese = document.createElement('div');
+      divJapanese.setAttribute('class', 'japaneseGroupX');
+      divContent.appendChild(divJapanese);
+
       p = document.createElement('p');
-      p.textContent = question[idxRiyu];
-      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J') {
+
+      [kNihongo1, kNihongo2] = fncNihongoBunnkai(question[idxRiyu]);
+
+      p.textContent = kNihongo1;
+      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K') {
         p.setAttribute('class', 'japanese');
-        divContent.appendChild(p);
+        divJapanese.appendChild(p);
 
       } else {
         p.setAttribute('class', 'japanese japaneseNoDisplay');
-        divContent.appendChild(p);
+        divJapanese.appendChild(p);
 
       }
+      p = document.createElement('p');
+
+      p.setAttribute('class', 'japaneseKnone japaneseGroup');
+      if (question[idxPattern] === 'K') {
+        p.textContent = ' / ' + kNihongo2;
+
+      } else {
+        p.textContent = ' ';
+      }
+
+      divJapanese.appendChild(p);
+
+
       //
       if (question[idxPattern] === 'C') {
         p = document.createElement('p');
@@ -892,7 +938,7 @@
         for (i = idxSpan; i < question.length; i++) {
           if (question[i] !== '') {
             span = document.createElement('span');
-            if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
+            if (question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K') {
               spanX++;
               span.setAttribute('class', `spanBack${spanX}`);
 
@@ -947,6 +993,17 @@
 
 
     }
+    // タイプK　日本語分解
+    function fncNihongoBunnkai(nihongoString) {
+      const cstSlash = "/";
+      let wNihongo1;
+      let wNihongo2;
+      let wNihongo = nihongoString.split(cstSlash);
+      wNihongo1 = wNihongo[0];
+      wNihongo2 = wNihongo[1];
+      return [wNihongo1, wNihongo2];
+
+    }
 
 
     //
@@ -958,6 +1015,7 @@
         const hanyuGroup = document.querySelectorAll('.hanyu');
         const pinyinGroup = document.querySelectorAll('.pinyin');
         const japaneseGroup = document.querySelectorAll('.japanese');
+
         //
         const comment = document.getElementById('comment');
         comment.textContent = "";
@@ -1035,18 +1093,26 @@
             japaneseGroup[i].classList.add('japaneseNoDisplay');
           }
 
+
         }
 
       } else {
         swButton = true;
         checknext.textContent = '次の問題';
         const comment = document.getElementById('comment');
+        const japaneseKnoneGroup = document.querySelectorAll('.japaneseGroup');
         const hanyuGroup = document.querySelectorAll('.hanyu');
         const pinyinGroup = document.querySelectorAll('.pinyin');
         const spanBack1 = document.querySelectorAll('.spanBack1');
         const spanBack2 = document.querySelectorAll('.spanBack2');
         const spanBack3 = document.querySelectorAll('.spanBack3');
         const spanBack4 = document.querySelectorAll('.spanBack4');
+        if (japaneseKnoneGroup[cssIndex].classList.contains('japaneseKnone')) {
+
+          japaneseKnoneGroup[cssIndex].classList.remove('japaneseKnone');
+          japaneseKnoneGroup[cssIndex].classList.add('japaneseKBlock');
+        }
+
         if (questions[cssIndex][idxPattern] !== 'E') {
           hanyuGroup[cssIndex].classList.add('hanyuDisplay');
           hanyuGroup[cssIndex].classList.remove('hanyuNoDisplay');
@@ -1056,7 +1122,7 @@
           pinyinGroup[cssIndex].classList.remove('pinyinNoDisplay');
 
         }
-        if (questions[cssIndex][idxPattern] === 'I' || questions[cssIndex][idxPattern] === 'J') {
+        if (questions[cssIndex][idxPattern] === 'I' || questions[cssIndex][idxPattern] === 'J' || questions[cssIndex][idxPattern] === 'K') {
           //
           spanBack1[cssIndex].classList.add('spanBackCansel');
           spanBack1[cssIndex].classList.remove('spacBack1');
