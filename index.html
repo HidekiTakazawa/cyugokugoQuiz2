@@ -397,6 +397,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   
   <script>
+    let osAndroid = false;
+    let ua = window.navigator.userAgent.toLocaleLowerCase();
+    if (ua.indexOf("android") !== -1) {
+      osAndroid = true;
+      console.log(ua);
+      console.log(ua.indexOf("android"));
+    } 
     // スプレッドシート　列　定数定義
     const idxNo = 0;
     const idxPattern = 1;
@@ -1214,10 +1221,7 @@
         hAnswer.charAt(hAnswer.length - 1) === constKuten) {
         whAnswer = hAnswer.slice(0, hAnswer.length - 1);
       }
-      // console.log(`hanyu=${hanyu}`);
-      // console.log(`whanyu=${whanyu}`);
-      // console.log(`hAnswer=${hAnswer}`);
-      // console.log(`whAnswer=${whAnswer}`);
+      
       return [whanyu, whAnswer];
 
 
@@ -1264,6 +1268,9 @@
 
     //
     function spanSortable() {
+      if (osAndroid) {
+        return;
+      }
       let answerGroup = document.querySelectorAll('.answer');;
       let questionGroup = document.querySelectorAll('.question');;
       let answerSpans = answerGroup[cssIndex];
