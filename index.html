@@ -392,10 +392,14 @@
 
 
   </div>
-  
+  <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script> -->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
-  
+  <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+ 
+ 
+  <!-- <script src="./get_post_gss.js"></script> -->
   <script>
     let osAndroid = false;
     let ua = window.navigator.userAgent.toLocaleLowerCase();
@@ -778,7 +782,7 @@
     function renderX_Question(question) {
       startTime = 0;
       container = document.getElementById('container');
-      let div, p, span, divContent, button, small;
+      let div, p, span, divContent, button, small, divSpanGroup;
       divContent = document.createElement('dir');
       divContent.setAttribute('class', 'dataContent');
       container.appendChild(divContent);
@@ -878,6 +882,7 @@
       div.setAttribute('class', 'answer member');
       divSpanGroup.appendChild(div);
       span = document.createElement('span');
+     
       if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H') {
         span.textContent = '';
 
@@ -913,7 +918,7 @@
             }
             span.textContent = question[i];
             span.setAttribute('onclick', 'speakDataX(this)')
-            
+            span.setAttribute('onmousedown', 'speakData(this)')
             div.appendChild(span);
 
           }
@@ -921,7 +926,7 @@
         }
 
       }
-      divContent.appendChild(divSpanGroup);
+       divContent.appendChild(divSpanGroup);
       //  2024-03-19 add パターンI,J,K以外に無理やり以下のクラスを付加する。
       if (question[idxPattern] !== 'I' && question[idxPattern] !== 'J' && question[idxPattern] !== 'K') {
         p = document.createElement('p');
@@ -1221,7 +1226,10 @@
         hAnswer.charAt(hAnswer.length - 1) === constKuten) {
         whAnswer = hAnswer.slice(0, hAnswer.length - 1);
       }
-      
+      // console.log(`hanyu=${hanyu}`);
+      // console.log(`whanyu=${whanyu}`);
+      // console.log(`hAnswer=${hAnswer}`);
+      // console.log(`whAnswer=${whAnswer}`);
       return [whanyu, whAnswer];
 
 
@@ -1264,9 +1272,7 @@
       swButton = false;
 
     }
-
-
-    //
+     //
     function spanSortable() {
       if (osAndroid) {
         return;
@@ -1288,6 +1294,9 @@
 
     }
 
+
+
+
     // イニシャル　書くシート用のCSS セット　　最初の問題に移る
     function iniCSSSet() {
       cssIndex = 0;
@@ -1300,6 +1309,7 @@
         classElement[i].classList.add("dataNone");
       }
       spanSortable();
+
 
     }
     // イニシャル　書くシート用のCSS セット　　最初の問題に移る
@@ -1314,6 +1324,8 @@
         }
       }
       spanSortable();
+
+
     }
 
   </script>
