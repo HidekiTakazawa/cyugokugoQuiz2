@@ -133,6 +133,7 @@
     .japaneseGroupX {
       display: flex;
     }
+
     .japaneseGroup {
       margin: 0;
     }
@@ -174,6 +175,7 @@
 
       color: yellow;
     }
+
     .spanBackNone {
       display: none;
     }
@@ -296,6 +298,7 @@
     .totalGradeNoDisplay {
       display: none;
     }
+
     #comment {
       margin: 5px 2px;
     }
@@ -397,8 +400,8 @@
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
- 
- 
+
+
   <!-- <script src="./get_post_gss.js"></script> -->
   <script>
     let osAndroid = false;
@@ -407,7 +410,7 @@
       osAndroid = true;
       console.log(ua);
       console.log(ua.indexOf("android"));
-    } 
+    }
     // スプレッドシート　列　定数定義
     const idxNo = 0;
     const idxPattern = 1;
@@ -493,7 +496,7 @@
       // this.disabled = true;
 
     }
-    
+
     recognition.onresult = function (event) {
 
       var results = event.results;
@@ -513,7 +516,7 @@
       }
     }
 
-    
+
     const timer = document.getElementById('timer');
     timer.addEventListener('click', () => {
       startTime = Date.now(); // 開始時間
@@ -691,24 +694,24 @@
     function renderQuestions(questions) {
       questions.forEach((question) => {
         question_Shuffle(question);
-        if (question[idxPattern] === 'A' || question[idxPattern] === 'B') {
+        if (question[idxPattern] >= 'A' && question[idxPattern] <= 'L') {
           renderX_Question(question);
 
-        } else if (question[idxPattern] === 'C' || question[idxPattern] === 'D') {
-          renderX_Question(question);
+          // } else if (question[idxPattern] === 'C' || question[idxPattern] === 'D') {
+          //   renderX_Question(question);
 
 
 
-        } else if (question[idxPattern] === 'E' || question[idxPattern] === 'F') {
-          renderX_Question(question);
+          // } else if (question[idxPattern] === 'E' || question[idxPattern] === 'F') {
+          //   renderX_Question(question);
 
-        } else if (question[idxPattern] === 'G' || question[idxPattern] === 'H') {
-          renderX_Question(question);
+          // } else if (question[idxPattern] === 'G' || question[idxPattern] === 'H') {
+          //   renderX_Question(question);
 
 
 
-        } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K') {
-          renderX_Question(question);
+          // } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K') {
+          //   renderX_Question(question);
 
         }
 
@@ -869,7 +872,7 @@
       }
 
       //
-      if (question[idxPattern] === 'B' || question[idxPattern] === 'G' || question[idxPattern] === 'H') {
+      if (question[idxPattern] === 'B' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L') {
         divSpeak = document.createElement('div');
         divSpeak.textContent = 'Speak';
         divSpeak.setAttribute('onclick', 'speakData2()');
@@ -882,8 +885,8 @@
       div.setAttribute('class', 'answer member');
       divSpanGroup.appendChild(div);
       span = document.createElement('span');
-     
-      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H') {
+
+      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L') {
         span.textContent = '';
 
       } else {
@@ -898,7 +901,7 @@
       divSpanGroup.appendChild(div);
       span = document.createElement('span');
       span.setAttribute('class', 'draggroup');
-      if (question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H') {
+      if (question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L') {
 
         span.textContent = '';
       } else {
@@ -926,7 +929,7 @@
         }
 
       }
-       divContent.appendChild(divSpanGroup);
+      divContent.appendChild(divSpanGroup);
       //  2024-03-19 add パターンI,J,K以外に無理やり以下のクラスを付加する。
       if (question[idxPattern] !== 'I' && question[idxPattern] !== 'J' && question[idxPattern] !== 'K') {
         p = document.createElement('p');
@@ -945,6 +948,33 @@
         input.setAttribute('maxlength', '40');
         input.setAttribute('size', '40');
         div.appendChild(input);
+      } else if (question[idxPattern] === 'L') {
+        div = document.createElement('div');
+        div.textContent = '中国語入力';
+        divContent.appendChild(div);
+        input = document.createElement('input');
+
+        input.setAttribute('class', 'input');
+        input.setAttribute('maxlength', '40');
+        input.setAttribute('size', '40');
+        div.appendChild(input);
+        //
+        micBtn = document.createElement('button');
+        micBtn.setAttribute('class', 'onseiStart');
+        micBtn.textContent = '音声入力';
+        micBtn.style.display = 'inline-block';
+        micBtn.setAttribute('onclick', 'fncOnseiNyuryoku(this)');
+        divContent.appendChild(micBtn);
+        small = document.createElement('small');
+        small.setAttribute('class', 'status');
+        divContent.appendChild(small);
+        div = document.createElement('div');
+        div.setAttribute('class', 'show_result');
+        divContent.appendChild(div);
+
+        show_result = document.querySelector('.show_result');
+
+
       } else if (question[idxPattern] === 'H') {
         micBtn = document.createElement('button');
         micBtn.setAttribute('class', 'onseiStart');
@@ -1129,7 +1159,7 @@
           japaneseGroup[cssIndex].classList.remove('japaneseNoDisplay');
 
         }
-        if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'F' || questions[cssIndex][idxPattern] === 'G') {
+        if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'F' || questions[cssIndex][idxPattern] === 'G' || questions[cssIndex][idxPattern] === 'L') {
           const inputGroup = document.querySelectorAll('.input');
           let inputHanyu = inputGroup[cssIndex];
           //
@@ -1142,6 +1172,9 @@
 
             }
             speakData(comment);
+
+          } else if (questions[cssIndex][idxPattern] === 'L') {
+            lPaternJudge(inputHanyu, hAnswer, hanyu)
 
 
           } else {
@@ -1157,7 +1190,7 @@
           }
 
           //
-        } else if (questions[cssIndex][idxPattern] === 'H') {
+        } else if (questions[cssIndex][idxPattern] === 'H' || questions[cssIndex][idxPattern] === 'L') {
           recognition.stop();
           let [whanyu, whAnswer] = hanyuHosei(hanyu, hAnswer);
           if (whanyu === whAnswer) {
@@ -1206,6 +1239,33 @@
         }
         //
       }
+
+    }
+    // Lパターン　判定
+    function lPaternJudge(inputHanyu, hAnswer, hanyu) {
+      recognition.stop();
+      if (inputHanyu.value !== hanyu) {
+
+        // comment.textContent = '错×　再加油！！';
+        comment.textContent = 'ピンイン入力もっと勉強して！！';
+        // speakData(comment);
+        return;
+
+      }
+
+
+      //
+      let [whanyu, whAnswer] = hanyuHosei(hanyu, hAnswer);
+      if (whanyu !== whAnswer) {
+        // comment.textContent = '错×　再加油！！';
+        comment.textContent = '中国語の発音　もっと勉強して！！';
+        // speakData(comment);
+        return;
+      }
+      seikaiSu++;
+      comment.textContent = '好！赞👍';
+      speakData(comment);
+
 
     }
     // Hパターン　？　。補正
@@ -1272,7 +1332,7 @@
       swButton = false;
 
     }
-     //
+    //
     function spanSortable() {
       if (osAndroid) {
         return;
