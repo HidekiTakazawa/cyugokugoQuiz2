@@ -233,7 +233,9 @@
     .pFontSize {
       font-size: 12px;
     }
-
+    .pFontSizeNoDisplay {
+      display: none;
+    }
     #comment {
       font-size: 32px;
     }
@@ -298,7 +300,14 @@
     .totalGradeNoDisplay {
       display: none;
     }
+    .lPaternNoDisplay {
+      display: none;
+    }
+    .lPaternAnswer {
+      cursor: pointer;
+      user-select: none;
 
+    }
     #comment {
       margin: 5px 2px;
     }
@@ -336,6 +345,9 @@
 
     .status {
       font-size: 14px;
+    }
+    .statusNodisplay {
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -416,8 +428,8 @@
     const idxPattern = 1;
     const idxHanyu = 2;
     const idxPinyin = 3;
-    const idxRiyu = 4;
-    const idxSpan = 5;
+    const idxRiyu = 4; // 日本語訳
+    const idxSpan = 5;  // F列
     //
     // 。　？　定数定義
     const constWenhao = '？';
@@ -488,8 +500,8 @@
       var classDataDisplay = document.getElementsByClassName('dataDisplay');
       witem0 = classDataDisplay.item(0);
       var wchild = witem0.children;
-      wStatus = wchild.item(8);
-      wShowResult = wchild.item(9);
+      wStatus = wchild.item(10);
+      wShowResult = wchild.item(11);  //  class="show_result"
 
       para1.style.display = 'none';
       recognition.start();
@@ -697,21 +709,7 @@
         if (question[idxPattern] >= 'A' && question[idxPattern] <= 'L') {
           renderX_Question(question);
 
-          // } else if (question[idxPattern] === 'C' || question[idxPattern] === 'D') {
-          //   renderX_Question(question);
-
-
-
-          // } else if (question[idxPattern] === 'E' || question[idxPattern] === 'F') {
-          //   renderX_Question(question);
-
-          // } else if (question[idxPattern] === 'G' || question[idxPattern] === 'H') {
-          //   renderX_Question(question);
-
-
-
-          // } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K') {
-          //   renderX_Question(question);
+          
 
         }
 
@@ -786,7 +784,7 @@
       startTime = 0;
       container = document.getElementById('container');
       let div, p, span, divContent, button, small, divSpanGroup;
-      divContent = document.createElement('dir');
+      divContent = document.createElement('div');
       divContent.setAttribute('class', 'dataContent');
       container.appendChild(divContent);
       //
@@ -859,14 +857,50 @@
       if (question[idxPattern] === 'C') {
         p = document.createElement('p');
         p.textContent = 'ピンインを漢字に直して並べ替え正しい文章にしてください。';
+        p.setAttribute('class', 'pFontSize');
+        divContent.appendChild(p);
+        p = document.createElement('p');
+        p.setAttribute('class', 'lPatern lPaternNoDisplay');
+        p.textContent = '';
         divContent.appendChild(p);
 
-      }
-      //
-      if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
+      } else if  (question[idxPattern] === 'L') {
+        
+        p = document.createElement('p');
+        p.textContent = '質問されたことに音声で回答してください。';
+        p.setAttribute('class', 'pFontSize');
+        divContent.appendChild(p);
+     
+        p = document.createElement('p');
+        p.setAttribute('class', 'lPatern lPaternNoDisplay');
+       
+        for (let i = idxSpan; i < question.length; i++) {
+          span = document.createElement('span');
+          span.textContent = question[i] + " ";
+          span.setAttribute('onclick', 'speakData(this)');
+          span.setAttribute('class', 'lPaternAnswer');
+          p.appendChild(span);
+
+        }
+        divContent.appendChild(p);
+    
+       } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
         p = document.createElement('p');
         p.textContent = '問題のブロックをクリックして発音が同じものを選んでください。';
         p.setAttribute('class', 'pFontSize');
+        divContent.appendChild(p);
+        p = document.createElement('p');
+        p.setAttribute('class', 'lPatern lPaternNoDisplay');
+        p.textContent = '';
+        divContent.appendChild(p);
+      } else {
+        p = document.createElement('p');
+        p.textContent = '';
+        p.setAttribute('class', 'pFontSize pFontSizeNoDisplay');
+        divContent.appendChild(p);
+        p = document.createElement('p');
+        p.setAttribute('class', 'lPatern lPaternNoDisplay');
+        p.textContent = '';
         divContent.appendChild(p);
 
       }
@@ -942,16 +976,7 @@
         div = document.createElement('div');
         div.textContent = '中国語入力';
         divContent.appendChild(div);
-        input = document.createElement('input');
-
-        input.setAttribute('class', 'input');
-        input.setAttribute('maxlength', '40');
-        input.setAttribute('size', '40');
-        div.appendChild(input);
-      } else if (question[idxPattern] === 'L') {
-        div = document.createElement('div');
-        div.textContent = '中国語入力';
-        divContent.appendChild(div);
+        
         input = document.createElement('input');
 
         input.setAttribute('class', 'input');
@@ -959,6 +984,13 @@
         input.setAttribute('size', '40');
         div.appendChild(input);
         //
+        div = document.createElement('div');
+        div.setAttribute('class', 'statsu statusNodisplay');
+        divContent.appendChild(div);
+        //
+
+
+      } else if (question[idxPattern] === 'H' || question[idxPattern] === 'L') {
         micBtn = document.createElement('button');
         micBtn.setAttribute('class', 'onseiStart');
         micBtn.textContent = '音声入力';
@@ -967,33 +999,28 @@
         divContent.appendChild(micBtn);
         small = document.createElement('small');
         small.setAttribute('class', 'status');
+       
         divContent.appendChild(small);
         div = document.createElement('div');
         div.setAttribute('class', 'show_result');
         divContent.appendChild(div);
 
-        show_result = document.querySelector('.show_result');
-
-
-      } else if (question[idxPattern] === 'H') {
-        micBtn = document.createElement('button');
-        micBtn.setAttribute('class', 'onseiStart');
-        micBtn.textContent = '音声入力';
-        micBtn.style.display = 'inline-block';
-        micBtn.setAttribute('onclick', 'fncOnseiNyuryoku(this)');
-        divContent.appendChild(micBtn);
-        small = document.createElement('small');
-        small.setAttribute('class', 'status');
-        divContent.appendChild(small);
+        // show_result = document.querySelector('.show_result');
         div = document.createElement('div');
-        div.setAttribute('class', 'show_result');
+
+        div.setAttribute('class', 'input inputNodisplay');
         divContent.appendChild(div);
-
-        show_result = document.querySelector('.show_result');
-
 
 
       } else {
+        //
+        div = document.createElement('div');
+        div.textContent = '';
+        divContent.appendChild(div);
+        //
+        div = document.createElement('div');
+        div.setAttribute('class', 'statsu statusNodisplay');
+        divContent.appendChild(div);
         //
         div = document.createElement('div');
 
@@ -1003,6 +1030,7 @@
 
 
     }
+    
     // タイプK　日本語分解
     function fncNihongoBunnkai(nihongoString) {
       const cstSlash = "/";
@@ -1118,6 +1146,7 @@
         const spanBack2 = document.querySelectorAll('.spanBack2');
         const spanBack3 = document.querySelectorAll('.spanBack3');
         const spanBack4 = document.querySelectorAll('.spanBack4');
+        const lPaterns = document.querySelectorAll('.lPatern');
         if (japaneseKnoneGroup[cssIndex].classList.contains('japaneseKnone')) {
 
           japaneseKnoneGroup[cssIndex].classList.remove('japaneseKnone');
@@ -1127,6 +1156,11 @@
         if (questions[cssIndex][idxPattern] !== 'E') {
           hanyuGroup[cssIndex].classList.add('hanyuDisplay');
           hanyuGroup[cssIndex].classList.remove('hanyuNoDisplay');
+        }
+        if (questions[cssIndex][idxPattern] === 'L') {
+         
+          lPaterns[cssIndex].classList.remove('lPaternNoDisplay');
+
         }
         if (questions[cssIndex][idxPattern] !== 'D') {
           pinyinGroup[cssIndex].classList.add('pinyinDisplay');
@@ -1159,7 +1193,7 @@
           japaneseGroup[cssIndex].classList.remove('japaneseNoDisplay');
 
         }
-        if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'F' || questions[cssIndex][idxPattern] === 'G' || questions[cssIndex][idxPattern] === 'L') {
+        if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'F' || questions[cssIndex][idxPattern] === 'G') {
           const inputGroup = document.querySelectorAll('.input');
           let inputHanyu = inputGroup[cssIndex];
           //
@@ -1173,11 +1207,11 @@
             }
             speakData(comment);
 
-          } else if (questions[cssIndex][idxPattern] === 'L') {
-            lPaternJudge(inputHanyu, hAnswer, hanyu)
-
-
+          
           } else {
+            console.log(`patern=${questions[cssIndex][idxPattern]}`);
+            console.log(`inputHanyu=${inputHanyu.value}`);
+            console.log(`hanyu=${hanyu}`);
             if (inputHanyu.value === hanyu) {
               seikaiSu++;
               comment.textContent = '好！赞👍';
@@ -1190,7 +1224,7 @@
           }
 
           //
-        } else if (questions[cssIndex][idxPattern] === 'H' || questions[cssIndex][idxPattern] === 'L') {
+        } else if (questions[cssIndex][idxPattern] === 'H') {
           recognition.stop();
           let [whanyu, whAnswer] = hanyuHosei(hanyu, hAnswer);
           if (whanyu === whAnswer) {
@@ -1201,6 +1235,10 @@
 
           }
           speakData(comment);
+
+          } else if (questions[cssIndex][idxPattern] === 'L') {
+             recognition.stop();
+            lPaternJudge(hAnswer, cssIndex)
 
 
 
@@ -1242,30 +1280,43 @@
 
     }
     // Lパターン　判定
-    function lPaternJudge(inputHanyu, hAnswer, hanyu) {
+    function lPaternJudge(hAnswer, cssIndex) {
       recognition.stop();
-      if (inputHanyu.value !== hanyu) {
+      
+      let matchOn = false;
+      for (let i = idxSpan; i < questions[cssIndex].length; i++) {
+        if (questions[cssIndex][i] !== '') {
+          console.log(`Lパターン　hAnswer=${hAnswer}`);
+          
+          let wHanyu;
+          let wHanswer;
+          [wHanyu, wHanswer] = hanyuHosei(questions[cssIndex][i], hAnswer)
+          console.log(`Lパターン　F列=${questions[cssIndex][i]}`);
+          if (wHanyu === wHanswer) {
+            matchOn = true;
+            break;
+           
+          }
 
-        // comment.textContent = '错×　再加油！！';
-        comment.textContent = 'ピンイン入力もっと勉強して！！';
-        // speakData(comment);
-        return;
-
+        }
       }
-
-
-      //
-      let [whanyu, whAnswer] = hanyuHosei(hanyu, hAnswer);
-      if (whanyu !== whAnswer) {
-        // comment.textContent = '错×　再加油！！';
-        comment.textContent = '中国語の発音　もっと勉強して！！';
-        // speakData(comment);
-        return;
-      }
-      seikaiSu++;
+      
+      if (matchOn) {
+         seikaiSu++;
       comment.textContent = '好！赞👍';
       speakData(comment);
 
+
+
+      } else {
+        comment.textContent = '错×　再加油！！';
+        
+        speakData(comment);
+
+      }
+
+
+     
 
     }
     // Hパターン　？　。補正
