@@ -742,6 +742,9 @@
 
     function question_Shuffle(question) {
       //
+      if (question[idxPattern] === 'L') {
+        return;
+      }
       const shuffleArray = (array) => {
         const cloneArray = [...array]
 
@@ -876,7 +879,9 @@
        
         for (let i = idxSpan; i < question.length; i++) {
           span = document.createElement('span');
-          span.textContent = question[i] + " ";
+          let lKaitou1, lKaitou2;
+          [lKaitou1,  lKaitou2] = bunkaiLKaitou(question[i]);
+          span.textContent = lKaitou1 + " ";
           span.setAttribute('onclick', 'speakData(this)');
           span.setAttribute('class', 'lPaternAnswer');
           p.appendChild(span);
@@ -1045,7 +1050,23 @@
 
 
     //
+    //
+    function bunkaiLKaitou(lKaitou) {
+      let lKaitou1, lKaitou2;
+      const cstSlash = "/";
+      
+      let wKaitou = lKaitou.split(cstSlash);
+      if (wKaitou.length === 1) {
+        lKaitou1 = wKaitou[0];
+        lKaitou2 = '好！赞👍';
+      } else {
+        lKaitou1 = wKaitou[0];
+        lKaitou2 = wKaitou[1];
 
+      }
+     
+      return [lKaitou1, lKaitou2];
+    }
     function checkNext() {
       if (swButton) {
         swButton = false;
@@ -1284,14 +1305,17 @@
       recognition.stop();
       
       let matchOn = false;
+      let lKaitou1;
+      let lKaitou2;
       for (let i = idxSpan; i < questions[cssIndex].length; i++) {
         if (questions[cssIndex][i] !== '') {
           console.log(`Lパターン　hAnswer=${hAnswer}`);
           
+          [lKaitou1, lKaitou2] = bunkaiLKaitou(questions[cssIndex][i])
           let wHanyu;
           let wHanswer;
-          [wHanyu, wHanswer] = hanyuHosei(questions[cssIndex][i], hAnswer)
-          console.log(`Lパターン　F列=${questions[cssIndex][i]}`);
+          [wHanyu, wHanswer] = hanyuHosei(lKaitou1, hAnswer)
+          console.log(`Lパターン　F列=${lKaitou1}`);
           if (wHanyu === wHanswer) {
             matchOn = true;
             break;
@@ -1303,13 +1327,13 @@
       
       if (matchOn) {
          seikaiSu++;
-      comment.textContent = '好！赞👍';
+      comment.textContent = lKaitou2;
       speakData(comment);
 
 
 
       } else {
-        comment.textContent = '错×　再加油！！';
+        comment.textContent = '你的回答不一样。';
         
         speakData(comment);
 
