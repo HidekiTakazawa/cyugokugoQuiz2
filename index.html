@@ -876,7 +876,14 @@
      
         p = document.createElement('p');
         p.setAttribute('class', 'lPatern lPaternNoDisplay');
-       
+        //
+        span = document.createElement('span');
+        
+        span.textContent = '模范回答:';
+        span.setAttribute('onclick', 'speakData(this)');
+        span.setAttribute('class', 'lPaternAnswer');
+        p.appendChild(span);
+
         for (let i = idxSpan; i < question.length; i++) {
           span = document.createElement('span');
           let lKaitou1, lKaitou2;
