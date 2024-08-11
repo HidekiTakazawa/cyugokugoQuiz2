@@ -497,13 +497,19 @@
 
     };
     function fncOnseiNyuryoku(para1) {
+      if (para1.innerHTML === 'ストップ') {
+        recognition.stop();
+        para1.innerHTML = '音声入力';
+        return;
+      }
       var classDataDisplay = document.getElementsByClassName('dataDisplay');
       witem0 = classDataDisplay.item(0);
       var wchild = witem0.children;
       wStatus = wchild.item(10);
       wShowResult = wchild.item(11);  //  class="show_result"
 
-      para1.style.display = 'none';
+      // para1.style.display = 'none';
+      para1.innerHTML = 'ストップ';
       recognition.start();
       // this.disabled = true;
 
