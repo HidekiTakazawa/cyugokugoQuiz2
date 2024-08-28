@@ -516,6 +516,7 @@
 
       // para1.style.display = 'none';
       para1.innerHTML = 'ストップ';
+      hAnswer = ' ';
       recognition.start();
       // this.disabled = true;
 
@@ -530,8 +531,11 @@
         if (results[i].isFinal) {
 
           wShowResult.innerHTML += '<div>' + results[i][0].transcript + '</div>';
+          console.log(`hAnswer=${results[i][0].transcript}`);
+          if (results[i][0].transcript !== '') {
 
-          hAnswer = results[i][0].transcript;
+            hAnswer = results[i][0].transcript;
+          }
         } else {
 
         }
