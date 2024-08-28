@@ -233,9 +233,11 @@
     .pFontSize {
       font-size: 12px;
     }
+
     .pFontSizeNoDisplay {
       display: none;
     }
+
     #comment {
       font-size: 32px;
     }
@@ -300,14 +302,17 @@
     .totalGradeNoDisplay {
       display: none;
     }
+
     .lPaternNoDisplay {
       display: none;
     }
+
     .lPaternAnswer {
       cursor: pointer;
       user-select: none;
 
     }
+
     #comment {
       margin: 5px 2px;
     }
@@ -346,6 +351,7 @@
     .status {
       font-size: 14px;
     }
+
     .statusNodisplay {
       display: none;
     }
@@ -715,7 +721,7 @@
         if (question[idxPattern] >= 'A' && question[idxPattern] <= 'L') {
           renderX_Question(question);
 
-          
+
 
         }
 
@@ -873,18 +879,18 @@
         p.textContent = '';
         divContent.appendChild(p);
 
-      } else if  (question[idxPattern] === 'L') {
-        
+      } else if (question[idxPattern] === 'L') {
+
         p = document.createElement('p');
         p.textContent = '質問されたことに音声で回答してください。';
         p.setAttribute('class', 'pFontSize');
         divContent.appendChild(p);
-     
+
         p = document.createElement('p');
         p.setAttribute('class', 'lPatern lPaternNoDisplay');
         //
         span = document.createElement('span');
-        
+
         span.textContent = '模范回答:';
         span.setAttribute('onclick', 'speakData(this)');
         span.setAttribute('class', 'lPaternAnswer');
@@ -893,7 +899,7 @@
         for (let i = idxSpan; i < question.length; i++) {
           span = document.createElement('span');
           let lKaitou1, lKaitou2;
-          [lKaitou1,  lKaitou2] = bunkaiLKaitou(question[i]);
+          [lKaitou1, lKaitou2] = bunkaiLKaitou(question[i]);
           span.textContent = lKaitou1 + " ";
           span.setAttribute('onclick', 'speakData(this)');
           span.setAttribute('class', 'lPaternAnswer');
@@ -901,8 +907,8 @@
 
         }
         divContent.appendChild(p);
-    
-       } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
+
+      } else if (question[idxPattern] === 'I' || question[idxPattern] === 'J') {
         p = document.createElement('p');
         p.textContent = '問題のブロックをクリックして発音が同じものを選んでください。';
         p.setAttribute('class', 'pFontSize');
@@ -994,7 +1000,7 @@
         div = document.createElement('div');
         div.textContent = '中国語入力';
         divContent.appendChild(div);
-        
+
         input = document.createElement('input');
 
         input.setAttribute('class', 'input');
@@ -1017,7 +1023,7 @@
         divContent.appendChild(micBtn);
         small = document.createElement('small');
         small.setAttribute('class', 'status');
-       
+
         divContent.appendChild(small);
         div = document.createElement('div');
         div.setAttribute('class', 'show_result');
@@ -1048,7 +1054,7 @@
 
 
     }
-    
+
     // タイプK　日本語分解
     function fncNihongoBunnkai(nihongoString) {
       const cstSlash = "/";
@@ -1067,7 +1073,7 @@
     function bunkaiLKaitou(lKaitou) {
       let lKaitou1, lKaitou2;
       const cstSlash = "/";
-      
+
       let wKaitou = lKaitou.split(cstSlash);
       if (wKaitou.length === 1) {
         lKaitou1 = wKaitou[0];
@@ -1077,7 +1083,7 @@
         lKaitou2 = wKaitou[1];
 
       }
-     
+
       return [lKaitou1, lKaitou2];
     }
     function checkNext() {
@@ -1192,7 +1198,7 @@
           hanyuGroup[cssIndex].classList.remove('hanyuNoDisplay');
         }
         if (questions[cssIndex][idxPattern] === 'L') {
-         
+
           lPaterns[cssIndex].classList.remove('lPaternNoDisplay');
 
         }
@@ -1241,7 +1247,7 @@
             }
             speakData(comment);
 
-          
+
           } else {
             console.log(`patern=${questions[cssIndex][idxPattern]}`);
             console.log(`inputHanyu=${inputHanyu.value}`);
@@ -1270,9 +1276,9 @@
           }
           speakData(comment);
 
-          } else if (questions[cssIndex][idxPattern] === 'L') {
-             recognition.stop();
-            lPaternJudge(hAnswer, cssIndex)
+        } else if (questions[cssIndex][idxPattern] === 'L') {
+          recognition.stop();
+          lPaternJudge(hAnswer, cssIndex)
 
 
 
@@ -1316,14 +1322,14 @@
     // Lパターン　判定
     function lPaternJudge(hAnswer, cssIndex) {
       recognition.stop();
-      
+
       let matchOn = false;
       let lKaitou1;
       let lKaitou2;
       for (let i = idxSpan; i < questions[cssIndex].length; i++) {
         if (questions[cssIndex][i] !== '') {
           console.log(`Lパターン　hAnswer=${hAnswer}`);
-          
+
           [lKaitou1, lKaitou2] = bunkaiLKaitou(questions[cssIndex][i])
           let wHanyu;
           let wHanswer;
@@ -1332,52 +1338,57 @@
           if (wHanyu === wHanswer) {
             matchOn = true;
             break;
-           
+
           }
 
         }
       }
-      
+
       if (matchOn) {
-         seikaiSu++;
-      comment.textContent = lKaitou2;
-      speakData(comment);
+        seikaiSu++;
+        comment.textContent = lKaitou2;
+        speakData(comment);
 
 
 
       } else {
         comment.textContent = '你的回答不一样。';
-        
+
         speakData(comment);
 
       }
 
 
-     
+
 
     }
     // Hパターン　？　。補正
     function hanyuHosei(hanyu, hAnswer) {
+      console.log(`hanyu=${hanyu}`);
+      console.log(`hAnswer=${hAnswer}`);
       let whanyu = hanyu;
 
       let whAnswer = hAnswer;
-      if (hanyu.charAt(hanyu.length - 1) === constWenhao ||
-        hanyu.charAt(hanyu.length - 1) === constWenhao2 ||
-        hanyu.charAt(hanyu.length - 1) === constKuten) {
-        whanyu = hanyu.slice(0, hanyu.length - 1);
-      }
-      let whanyu2 = whanyu.split(cstKanma);
-      whanyu = whanyu2.join('');
+      
+      let whanyu1 = whanyu.split(cstKanma);
+      let whanyu2 = whanyu1.join('');
+      
+      let whanyu3 = whanyu2.split(constWenhao);
+      let whanyu4 = whanyu3.join('');
+      
+      let whanyu5 = whanyu4.split(constKuten);
+      whanyu = whanyu5.join('');
       //
-      if (hAnswer.charAt(hAnswer.length - 1) === constWenhao ||
-        hAnswer.charAt(hAnswer.length - 1) === constWenhao2 ||
-        hAnswer.charAt(hAnswer.length - 1) === constKuten) {
-        whAnswer = hAnswer.slice(0, hAnswer.length - 1);
-      }
-      // console.log(`hanyu=${hanyu}`);
-      // console.log(`whanyu=${whanyu}`);
-      // console.log(`hAnswer=${hAnswer}`);
-      // console.log(`whAnswer=${whAnswer}`);
+      let whAnswer1 = whAnswer.split(cstKanma);
+      let whAnswer2 = whAnswer1.join('');
+      
+      let whAnswer3 = whAnswer2.split(constWenhao);
+      let whAnswer4 = whAnswer3.join('');
+      
+      let whAnswer5 = whAnswer4.split(constKuten);
+      whAnswer = whAnswer5.join('');
+
+     
       return [whanyu, whAnswer];
 
 
