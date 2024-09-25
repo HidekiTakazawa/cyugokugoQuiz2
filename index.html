@@ -459,7 +459,7 @@
     let wShowResult;  // 音声の出力結果
     let kNihongo1;
     let kNihongo2;
-
+    let hanyuTab; // C,Gパターンの中国語の配列
 
 
     //
@@ -618,7 +618,8 @@
     function speakData2() {
       let l = 1;
       // if (param1 instanceof HTMLTableCellElement) {
-      const hanyuWords = questions[cssIndex][idxHanyu];
+      
+      const hanyuWords = setHanyuBunkai(questions[cssIndex][idxHanyu]);
       var uttr = new SpeechSynthesisUtterance(hanyuWords);
       uttr.lang = "zh-CN"
       uttr.rate = speakSpeedRate();
@@ -826,7 +827,9 @@
       divContent.appendChild(p);
       //
       p = document.createElement('p');
-      p.textContent = question[idxHanyu];
+      let wHanyu;
+      wHanyu = setHanyuBunkai(question[idxHanyu]);
+      p.textContent = wHanyu;
       if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I') {
 
         p.setAttribute('class', 'hanyu');
@@ -1058,6 +1061,17 @@
 
 
     }
+    // タイプC,G　中国語分解
+    function setHanyuBunkai(hanyuString) {
+      
+      const cstSlash = "/";
+      let wHanyu1;
+      
+      let wHanyu = hanyuString.split(cstSlash);
+      wHanyu1 = wHanyu[0];
+      return wHanyu1;
+
+    }
 
     // タイプK　日本語分解
     function fncNihongoBunnkai(nihongoString) {
@@ -1251,8 +1265,17 @@
             }
             speakData(comment);
 
+          } else if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'G') {
+            if (patternCorG_Judge(inputHanyu.value, cssIndex)) {
+              seikaiSu++;
+              comment.textContent = '好！赞👍';
+            } else {
+              comment.textContent = '错×　再加油！！';
 
+            }
+            speakData(comment);
           } else {
+
             console.log(`patern=${questions[cssIndex][idxPattern]}`);
             console.log(`inputHanyu=${inputHanyu.value}`);
             console.log(`hanyu=${hanyu}`);
@@ -1418,6 +1441,13 @@
       }
       matchOn = false;
       return matchOn;
+    }
+    // 
+    function patternCorG_Judge(inputHanyu, cssIndex) {
+      const hanyu = questions[cssIndex][idxHanyu];
+      const hanyuParts = hanyu.split('/');
+      
+      return hanyuParts.includes(inputHanyu);
     }
     //
     function setReTry() {
