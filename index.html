@@ -762,7 +762,8 @@
       divGrade.setAttribute('class', 'totalGrade totalGradeNoDisplay');
       container.appendChild(divGrade);
       let div = document.createElement('div');
-      div.textContent = `全問題数${questions.length - 1}問中で`;
+      let mondaisu = questions.filter(question => question[idxPattern] !== 'PX').length - 1;
+      div.textContent = `全問題数${mondaisu}問中で`;
       divGrade.appendChild(div);
 
 
@@ -831,7 +832,7 @@
 
       p = document.createElement('p');
       p.textContent = question[idxPinyin];
-      if (question[idxPattern] === 'D' || question[idxPattern] === 'H' || question[idxPattern] === 'I') {
+      if (question[idxPattern] === 'D' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'PX') {
         p.setAttribute('class', 'pinyin');
 
       } else {
@@ -873,7 +874,7 @@
       [kNihongo1, kNihongo2] = fncNihongoBunnkai(question[idxRiyu]);
 
       p.textContent = kNihongo1;
-      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'N') {
+      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'N' || question[idxPattern] === 'PX') {
         p.setAttribute('class', 'japanese');
         divJapanese.appendChild(p);
 
@@ -1166,7 +1167,7 @@
           totalGrade.classList.add('totalGradeDisplay');
           totalGrade.classList.remove('totalGradeNoDisplay');
           let div = document.createElement('div');
-          let mondaisu = questions.length - 1;
+          let mondaisu = questions.filter(question => question[idxPattern] !== 'PX').length - 1;
           let ritsu = seikaiSu * 100 / mondaisu;
           div.textContent = `正答数は${seikaiSu}, 正答率は${ritsu.toFixed(1)}でした。`;
           totalGrade.appendChild(div);
