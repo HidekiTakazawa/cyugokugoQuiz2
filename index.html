@@ -443,7 +443,7 @@
     const constKuten = '。';
     const cstKanma = "，";
     let cssIndex = 0;
-
+    let sheetIndex2;  // シート番号 for パターンO,P,Q
     let swButton = false;  // false: check  true: next
 
     let main;
@@ -608,7 +608,7 @@
 
 
       } else {
-        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P') {
+        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P' || quizPattern === 'Q' || quizPattern === 'R' || quizPattern === 'S') {
           console.log(answerSpans.children.length);
           if (answerSpans.children.length > 1) {
             questionSpans.appendChild(answerSpans.children[1]);
@@ -665,7 +665,8 @@
 
     select.onchange = event => {
       var selIndex = select.selectedIndex;
-      sheetIndex = selIndex;
+      sheetIndex = selIndex;  // これは不要かもしれない
+      sheetIndex2 = selIndex;
       console.log(select.selectedIndex);
 
 
@@ -674,7 +675,7 @@
       container = document.createElement('div');
       container.setAttribute('id', 'container');
       main.appendChild(container);
-      questions = sheetDatas[selIndex + 1];
+      questions = structuredClone(sheetDatas[selIndex + 1]);
       renderQuestions(questions);
       iniCSSSet();
       cssIndex = 0;
@@ -709,7 +710,8 @@
 
         // getFromGAS(1);
         sheetDatas = JSON.parse(result);
-        questions = sheetDatas[1];
+        sheetIndex2 = 0; // 第1番目のシート
+        questions = structuredClone(sheetDatas[1]);
         renderQuestions(questions);
 
         iniCSSSet();
@@ -734,7 +736,7 @@
       });
     }
     function renderQuestions(questions) {
-      saveQuestions = structuredClone(questions); // Oパターンのための保存 2次元配列の複製
+      
       questions.forEach((question) => {
         question_Shuffle(question);
         if (question[idxPattern] >= 'A' && question[idxPattern] <= 'T') {
@@ -832,7 +834,7 @@
 
       p = document.createElement('p');
       p.textContent = question[idxPinyin];
-      if (question[idxPattern] === 'D' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'PX') {
+      if (question[idxPattern] === 'D' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'Q' || question[idxPattern] === 'PX') {
         p.setAttribute('class', 'pinyin');
 
       } else {
@@ -845,7 +847,7 @@
       let wHanyu;
       wHanyu = setHanyuBunkai(question[idxHanyu]);
       p.textContent = wHanyu;
-      if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'N') {
+      if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'N'  || question[idxPattern] === 'Q') {
 
         p.setAttribute('class', 'hanyu');
         if (question[idxPattern] === 'N') {
@@ -874,7 +876,7 @@
       [kNihongo1, kNihongo2] = fncNihongoBunnkai(question[idxRiyu]);
 
       p.textContent = kNihongo1;
-      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'N' || question[idxPattern] === 'PX') {
+      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'N' || question[idxPattern] === 'PX' || question[idxPattern] === 'Q' || question[idxPattern] === 'R' || question[idxPattern] === 'S') {
         p.setAttribute('class', 'japanese');
         divJapanese.appendChild(p);
 
@@ -945,7 +947,7 @@
         p.setAttribute('class', 'lPatern lPaternNoDisplay');
         p.textContent = '';
         divContent.appendChild(p);
-      } else if (question[idxPattern] === 'O' || question[idxPattern] === 'P') {
+      } else if (question[idxPattern] === 'O' || question[idxPattern] === 'P' || question[idxPattern] === 'Q') {
         p = document.createElement('p');
         p.textContent = '問題のブロックをクリックして、問いに対する回答が最も適しているものを選んでください。';
         p.setAttribute('class', 'pFontSize');
@@ -968,7 +970,7 @@
       }
 
       //
-      if (question[idxPattern] === 'B' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'M'　|| question[idxPattern] === 'O' || question[idxPattern] === 'PX' || question[idxPattern] === 'P') {
+      if (question[idxPattern] === 'B' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'M'　|| question[idxPattern] === 'O' || question[idxPattern] === 'PX' || question[idxPattern] === 'P' || question[idxPattern] === 'Q') {
         divSpeak = document.createElement('div');
         divSpeak.textContent = 'Speak';
         divSpeak.setAttribute('onclick', 'speakData2()');
@@ -1009,7 +1011,7 @@
           if (question[i] !== '') {
             span = document.createElement('span');
             span.setAttribute('class', 'draggroup');
-            if (question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'O' || question[idxPattern] === 'P') {
+            if (question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'O' || question[idxPattern] === 'P' || question[idxPattern] === 'Q') {
               spanX++;
               span.setAttribute('class', `spanBack${spanX}`);
 
@@ -1027,7 +1029,7 @@
       }
       divContent.appendChild(divSpanGroup);
       //  2024-03-19 add パターンI,J,K以外に無理やり以下のクラスを付加する。
-      if (question[idxPattern] !== 'I' && question[idxPattern] !== 'J' && question[idxPattern] !== 'K' && question[idxPattern] !== 'O' && question[idxPattern] !== 'P') {
+      if (question[idxPattern] !== 'I' && question[idxPattern] !== 'J' && question[idxPattern] !== 'K' && question[idxPattern] !== 'O' && question[idxPattern] !== 'P' && question[idxPattern] !== 'Q') {
         p = document.createElement('p');
         p.setAttribute('class', 'spanBack1 spanBack2 spanBack3 spanBack4 spanBackNone');
         divContent.appendChild(p);
@@ -1269,7 +1271,7 @@
           pinyinGroup[cssIndex].classList.remove('pinyinNoDisplay');
 
         }
-        if (questions[cssIndex][idxPattern] === 'I' || questions[cssIndex][idxPattern] === 'J' || questions[cssIndex][idxPattern] === 'K' || questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P') {
+        if (questions[cssIndex][idxPattern] === 'I' || questions[cssIndex][idxPattern] === 'J' || questions[cssIndex][idxPattern] === 'K' || questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q') {
           //
           spanBack1[cssIndex].classList.add('spanBackCansel');
           spanBack1[cssIndex].classList.remove('spacBack1');
@@ -1383,10 +1385,11 @@
             speakData(comment);
           } else {
             let correctAnswer;
-            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P') {
-
+            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R') {
+              
+              saveQuestions = structuredClone(sheetDatas[sheetIndex2 + 1]);
               correctAnswer = saveQuestions[cssIndex][5];
-
+             
             
             } else if (questions[cssIndex][idxPattern] === 'E') {
               correctAnswer = pinyin;
