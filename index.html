@@ -608,7 +608,7 @@
 
 
       } else {
-        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P' || quizPattern === 'Q' || quizPattern === 'R' || quizPattern === 'S') {
+        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P' || quizPattern === 'Q' || quizPattern === 'R' || quizPattern === 'S' || quizPattern === 'T') {
           console.log(answerSpans.children.length);
           if (answerSpans.children.length > 1) {
             questionSpans.appendChild(answerSpans.children[1]);
@@ -739,7 +739,7 @@
       
       questions.forEach((question) => {
         question_Shuffle(question);
-        if (question[idxPattern] >= 'A' && question[idxPattern] <= 'T') {
+        if (question[idxPattern] >= 'A' && question[idxPattern] <= 'UX') {
           renderX_Question(question);
 
 
@@ -764,7 +764,7 @@
       divGrade.setAttribute('class', 'totalGrade totalGradeNoDisplay');
       container.appendChild(divGrade);
       let div = document.createElement('div');
-      let mondaisu = questions.filter(question => question[idxPattern] !== 'PX').length - 1;
+      let mondaisu = questions.filter(question => question[idxPattern] !== 'PX' && question[idxPattern] !== 'UX').length - 1;
       div.textContent = `全問題数${mondaisu}問中で`;
       divGrade.appendChild(div);
 
@@ -776,7 +776,7 @@
 
     function question_Shuffle(question) {
       //
-      if (question[idxPattern] === 'L'　|| question[idxPattern] === 'PX') {
+      if (question[idxPattern] === 'L' || question[idxPattern] === 'PX' || question[idxPattern] === 'UX') {
         return;
       }
       const shuffleArray = (array) => {
@@ -834,7 +834,7 @@
 
       p = document.createElement('p');
       p.textContent = question[idxPinyin];
-      if (question[idxPattern] === 'D' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'Q' || question[idxPattern] === 'PX') {
+      if (question[idxPattern] === 'D' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'Q' || question[idxPattern] === 'PX' || question[idxPattern] === 'UX') {
         p.setAttribute('class', 'pinyin');
 
       } else {
@@ -847,7 +847,7 @@
       let wHanyu;
       wHanyu = setHanyuBunkai(question[idxHanyu]);
       p.textContent = wHanyu;
-      if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'N'  || question[idxPattern] === 'Q') {
+      if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'N'  || question[idxPattern] === 'Q' || question[idxPattern] === 'T' || question[idxPattern] === 'UX') {
 
         p.setAttribute('class', 'hanyu');
         if (question[idxPattern] === 'N') {
@@ -876,7 +876,7 @@
       [kNihongo1, kNihongo2] = fncNihongoBunnkai(question[idxRiyu]);
 
       p.textContent = kNihongo1;
-      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'N' || question[idxPattern] === 'PX' || question[idxPattern] === 'Q' || question[idxPattern] === 'R' || question[idxPattern] === 'S') {
+      if (question[idxPattern] === 'A' || question[idxPattern] === 'F' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'J' || question[idxPattern] === 'K' || question[idxPattern] === 'N' || question[idxPattern] === 'PX' || question[idxPattern] === 'Q' || question[idxPattern] === 'R' || question[idxPattern] === 'S' || question[idxPattern] === 'T' || question[idxPattern] === 'UX') {
         p.setAttribute('class', 'japanese');
         divJapanese.appendChild(p);
 
@@ -984,7 +984,7 @@
       divSpanGroup.appendChild(div);
       span = document.createElement('span');
 
-      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'PX') {
+      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'PX' || question[idxPattern] === 'UX') {
         span.textContent = '';
 
       } else {
@@ -999,7 +999,7 @@
       divSpanGroup.appendChild(div);
       span = document.createElement('span');
       span.setAttribute('class', 'draggroup');
-      if (question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'PX') {
+      if (question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'PX' || question[idxPattern] === 'UX') {
 
         span.textContent = '';
       } else {
@@ -1148,7 +1148,7 @@
       return [lKaitou1, lKaitou2];
     }
     function checkNext() {
-      if (questions[cssIndex][idxPattern] === 'PX') {
+      if (questions[cssIndex][idxPattern] === 'PX' || questions[cssIndex][idxPattern] === 'UX') {
         swButton = true;
       }
       if (swButton) {
@@ -1169,7 +1169,7 @@
           totalGrade.classList.add('totalGradeDisplay');
           totalGrade.classList.remove('totalGradeNoDisplay');
           let div = document.createElement('div');
-          let mondaisu = questions.filter(question => question[idxPattern] !== 'PX').length - 1;
+          let mondaisu = questions.filter(question => question[idxPattern] !== 'PX' && question[idxPattern] !== 'UX').length - 1;
           let ritsu = seikaiSu * 100 / mondaisu;
           div.textContent = `正答数は${seikaiSu}, 正答率は${ritsu.toFixed(1)}でした。`;
           totalGrade.appendChild(div);
@@ -1385,7 +1385,7 @@
             speakData(comment);
           } else {
             let correctAnswer;
-            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R') {
+            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R' || questions[cssIndex][idxPattern] === 'T') {
               
               saveQuestions = structuredClone(sheetDatas[sheetIndex2 + 1]);
               correctAnswer = saveQuestions[cssIndex][5];
