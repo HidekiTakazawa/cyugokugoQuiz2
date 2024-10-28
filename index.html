@@ -1400,8 +1400,7 @@
             console.log(`correctAnswer=${correctAnswer}`);
             console.log(`answerString=${answerString}`);
             // if (answerString === correctAnswer) {
-            if (correctAnswer.includes(answerString)) {
-
+            if (answerString.trim() !== '' && correctAnswer.includes(answerString)) {
               comment.textContent = '好！赞👍';
               seikaiSu++;
               console.log('OK');
@@ -1425,7 +1424,8 @@
         
         // Replace '()' with answerString in hanyuParts1
         let hanyuParts3 = hanyuParts1.replace('()', answerString);
-        
+        console.log(`hanyuParts2=${hanyuParts2}`);
+        console.log(`hanyuParts3=${hanyuParts3}`);
         
           if (hanyuParts2 === hanyuParts3) {
             return true;
