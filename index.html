@@ -1373,19 +1373,10 @@
 
           }
           console.log(answerString);
-          if (questions[cssIndex][idxPattern] === 'N') {
-            if (patternNCheck(answerString, hanyu)) {
-              seikaiSu++;
-              comment.textContent = '好！赞👍';
-            } else {
-              comment.textContent = '错×　再加油！！';
-
-            }
-            
-            speakData(comment);
-          } else {
+         
+          
             let correctAnswer;
-            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R' || questions[cssIndex][idxPattern] === 'T') {
+            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R' || questions[cssIndex][idxPattern] === 'T'  || questions[cssIndex][idxPattern] === 'N') {
               
               saveQuestions = structuredClone(sheetDatas[sheetIndex2 + 1]);
               correctAnswer = saveQuestions[cssIndex][5];
@@ -1435,7 +1426,7 @@
           }
         }
        
-      }
+      
       // Lパターン　判定
       function lPaternJudge(hAnswer, cssIndex) {
         recognition.stop();
