@@ -355,6 +355,7 @@
     .statusNodisplay {
       display: none;
     }
+
     .loading {
       position: fixed;
       top: 100px;
@@ -382,6 +383,7 @@
         transform: rotate(360deg);
       }
     }
+
     @keyframes fadeIn {
       0% {
         opacity: 0;
@@ -615,7 +617,7 @@
     function speakDataNpatern(hanyuString) {
 
       // if (param1 instanceof HTMLTableCellElement) {
-      
+
       var uttr = new SpeechSynthesisUtterance(hanyuString);
       uttr.lang = "zh-CN"
       uttr.rate = speakSpeedRate();
@@ -648,14 +650,14 @@
         uttr.lang = "zh-CN"
         uttr.rate = speakSpeedRate();
         // 利用可能な音声を確認
-      const voices = speechSynthesis.getVoices();
-      const chineseVoice = getChineseVoice();
+        const voices = speechSynthesis.getVoices();
+        const chineseVoice = getChineseVoice();
 
-      if (chineseVoice) {
-        uttr.voice = chineseVoice;
-      } else {
-        console.warn('Chinese voice not found, using default voice.');
-      }
+        if (chineseVoice) {
+          uttr.voice = chineseVoice;
+        } else {
+          console.warn('Chinese voice not found, using default voice.');
+        }
         speechSynthesis.cancel();
         speechSynthesis.speak(uttr);
 
@@ -667,7 +669,7 @@
 
 
       } else {
-        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P' || quizPattern === 'Q' || quizPattern === 'R' || quizPattern === 'S' || quizPattern === 'T') {
+        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P' || quizPattern === 'Q' || quizPattern === 'R' || quizPattern === 'S' || quizPattern === 'T' || quizPattern === 'W' || quizPattern === 'X') {
           console.log(answerSpans.children.length);
           if (answerSpans.children.length > 1) {
             questionSpans.appendChild(answerSpans.children[1]);
@@ -816,10 +818,10 @@
       });
     }
     function renderQuestions(questions) {
-      
+
       questions.forEach((question) => {
         question_Shuffle(question);
-        if (question[idxPattern] >= 'A' && question[idxPattern] <= 'V') {
+        if (question[idxPattern] >= 'A' && question[idxPattern] <= 'X') {
           renderX_Question(question);
 
 
@@ -856,7 +858,7 @@
 
     function question_Shuffle(question) {
       //
-      if (question[idxPattern] === 'L' || question[idxPattern] === 'PX' || question[idxPattern] === 'UX' || question[idxPattern] === 'V') {
+      if (question[idxPattern] === 'L' || question[idxPattern] === 'PX' || question[idxPattern] === 'UX' || question[idxPattern] === 'V' || question[idxPattern] === 'W' || question[idxPattern] === 'X') {
         return;
       }
       const shuffleArray = (array) => {
@@ -898,13 +900,16 @@
 
     // 
     function renderX_Question(question) {
+      if (question[idxPattern] === 'W') {
+        patternW_Hanyu_Hosei(question);
+      }
       startTime = 0;
       container = document.getElementById('container');
       let div, p, span, divContent, button, small, divSpanGroup;
       divContent = document.createElement('div');
       divContent.setAttribute('class', 'dataContent');
       container.appendChild(divContent);
-      
+
       p = document.createElement('p');
       p.textContent = `問題番号：${question[idxNo]}/${questions.length - 1}`;
       p.setAttribute('class', 'question-no');
@@ -927,16 +932,17 @@
       let wHanyu;
       wHanyu = setHanyuBunkai(question[idxHanyu]);
       p.textContent = wHanyu;
-      if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'N'  || question[idxPattern] === 'Q' || question[idxPattern] === 'T' || question[idxPattern] === 'UX') {
+      if (question[idxPattern] === 'E' || question[idxPattern] === 'H' || question[idxPattern] === 'I' || question[idxPattern] === 'N' || question[idxPattern] === 'Q' || question[idxPattern] === 'T' || question[idxPattern] === 'UX') {
 
         p.setAttribute('class', 'hanyu');
         if (question[idxPattern] === 'N') {
           let wHanyu2 = setHanyuBunkai2(question[idxHanyu]);
           p.setAttribute('onclick', `speakDataNpatern("${wHanyu2}")`);
+
         } else {
           p.setAttribute('onclick', 'speakData(this)');
         }
-       
+
         divContent.appendChild(p);
 
       } else {
@@ -1045,7 +1051,16 @@
         p = document.createElement('p');
         p.setAttribute('class', 'lPatern lPaternNoDisplay');
         p.textContent = '';
-        divContent.appendChild(p); 
+        divContent.appendChild(p);
+      } else if (question[idxPattern] === 'W' || question[idxPattern] === 'X') {
+        p = document.createElement('p');
+        p.textContent = 'Speakボタンからの音声を聞いて、返答をピンイン入力してください。';
+        p.setAttribute('class', 'pFontSize');
+        divContent.appendChild(p);
+        p = document.createElement('p');
+        p.setAttribute('class', 'lPatern lPaternNoDisplay');
+        p.textContent = '';
+        divContent.appendChild(p);
       } else {
         p = document.createElement('p');
         p.textContent = '';
@@ -1059,11 +1074,17 @@
       }
 
       //
-      if (question[idxPattern] === 'B' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'M'　|| question[idxPattern] === 'O' || question[idxPattern] === 'PX' || question[idxPattern] === 'P' || question[idxPattern] === 'Q' || question[idxPattern] === 'V') {
+      if (question[idxPattern] === 'B' || question[idxPattern] === 'G' || question[idxPattern] === 'H' || question[idxPattern] === 'L' || question[idxPattern] === 'M' || question[idxPattern] === 'O' || question[idxPattern] === 'PX' || question[idxPattern] === 'P' || question[idxPattern] === 'Q' || question[idxPattern] === 'V' || question[idxPattern] === 'W' || question[idxPattern] === 'X') {
         divSpeak = document.createElement('div');
         divSpeak.textContent = 'Speak';
-        divSpeak.setAttribute('onclick', 'speakData2()');
+
         divSpeak.setAttribute('class', 'divSpeak');
+        if (question[idxPattern] === 'W' || question[idxPattern] === 'X') {
+          let wHanyuWX = setHanyuBunkaiWX(question[idxHanyu], question);
+          divSpeak.setAttribute('onclick', `speakDataNpatern("${wHanyuWX}")`);
+        } else {
+          divSpeak.setAttribute('onclick', 'speakData2()');
+        }
         divContent.appendChild(divSpeak);
       }
       // 
@@ -1077,7 +1098,13 @@
         span.textContent = '';
 
       } else {
-        span.textContent = '回答：　';
+        if (question[idxPattern] === 'W' || question[idxPattern] === 'X') {
+          span.textContent = '選択：　';
+
+        } else {
+          span.textContent = '回答：　';
+        }
+
 
       }
       span.setAttribute('class', 'draggroup');
@@ -1092,7 +1119,13 @@
 
         span.textContent = '';
       } else {
-        span.textContent = '問題：　';
+        if (question[idxPattern] === 'W' || question[idxPattern] === 'X') {
+          span.textContent = '一覧：　';
+
+        } else {
+          span.textContent = '問題：　';
+        }
+
         div.appendChild(span);
         let i;
         let spanX = 0;
@@ -1125,7 +1158,7 @@
       }
 
       // 
-      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G') {
+      if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'W' || question[idxPattern] === 'X') {
         div = document.createElement('div');
         div.textContent = '中国語入力';
         divContent.appendChild(div);
@@ -1183,6 +1216,75 @@
 
 
     }
+    
+        
+    // タイプW　中国語の補正
+    function patternW_Hanyu_Hosei(question) {
+      // let cntTango = Math.floor(Math.random() * (question.length - idxSpan)) + 1;
+      let cntTango = Math.floor(Math.random() * (question.length - idxSpan));
+      console.log(`question.length=${question.length}`);
+      console.log(`idxSpan=${idxSpan}`);
+      console.log(`cntTango=${cntTango}`);
+      let selectTango = question[cntTango + idxSpan - 1];
+      console.log(`selectTango=${selectTango}`);
+      // F列以降の空でない有効な選択肢を抽出
+      const validOptions = [];
+      for (let i = idxSpan; i < question.length; i++) {
+        if (question[i] && question[i].trim() !== "") {
+          validOptions.push(question[i]);
+        }
+      }
+
+      if (validOptions.length === 0) {
+        console.warn("パターンW: 有効な選択肢がありません。", question);
+        // 選択肢がない場合、()を空文字列で置き換えるか、エラー処理を行う
+        question[idxHanyu] = question[idxHanyu].replaceAll('()', '');
+        return;
+      }
+
+      // 有効な選択肢の中からランダムに1つ選ぶ
+      const randomIndex = Math.floor(Math.random() * validOptions.length);
+      const selectedOptionRaw = validOptions[randomIndex];
+
+      console.log(`question.length (original)=${question.length}, idxSpan=${idxSpan}`);
+      console.log(`validOptions.length=${validOptions.length}, randomIndex=${randomIndex}`);
+      console.log(`Selected option (raw): ${selectedOptionRaw}`);
+
+      const cstSlash = "/";
+      // let wTangos = selectTango.split(cstSlash);
+      let wTangos = selectedOptionRaw.split(cstSlash);
+      let wTango = wTangos[0];
+      if (wTangos.length === 0 || wTangos[0].trim() === "") {
+          console.warn("選択された単語のパース結果が無効です:", selectedOptionRaw);
+          wTango = ""; // または適切なデフォルト値
+      }
+
+      let hanyuString = question[idxHanyu];
+      console.log(`hanyuString=${hanyuString}`);
+      console.log(`Original hanyuString for replacement: ${hanyuString}`);
+
+      let wHanyu2 = hanyuString.replaceAll('()', wTango);
+      console.log(`wHanyu2=${wHanyu2}`);
+      console.log(`Replaced hanyuString: ${wHanyu2}`);
+      question[idxHanyu] = wHanyu2;
+      // 日本語の変換
+      wTango = wTangos[2];
+      let jpSentence = question[idxRiyu];
+      console.log(`jpSentence=${jpSentence}`);
+      let jpSentence2 = jpSentence.replaceAll('()', wTango);
+      console.log(`jpSentence2=${jpSentence2}`);
+      question[idxRiyu] = jpSentence2;
+
+
+
+
+
+     }
+ 
+ 
+
+
+
     // タイプC,G,A　中国語分解
     function setHanyuBunkai(hanyuString) {
 
@@ -1197,12 +1299,21 @@
     // タイプN　中国語分解 /以下の中国語文字列を返す
     function setHanyuBunkai2(hanyuString) {
       const cstSlash = "/";
-      
+
       let wHanyu2;
       let wHanyu = hanyuString.split(cstSlash);
-      
+
       wHanyu2 = wHanyu[1];
-      return  wHanyu2;
+      return wHanyu2;
+
+    }
+    // タイプWX　/で中国語分解し先頭を返す。
+    function setHanyuBunkaiWX(hanyuString, question) {
+      const cstSlash = "/";
+      let wHanyu = hanyuString.split(cstSlash);
+
+      let wHanyu2 = wHanyu[0];
+      return wHanyu2;
 
     }
     // タイプK　日本語分解
@@ -1382,8 +1493,8 @@
         }
         const hanyu = questions[cssIndex][idxHanyu];
         if (questions[cssIndex][idxPattern] === 'N') {
-          hanyuGroup[cssIndex].innerHTML =hanyu;
-          
+          hanyuGroup[cssIndex].innerHTML = hanyu;
+
         }
         const pinyin = questions[cssIndex][idxPinyin];
         console.log(hanyu);
@@ -1394,7 +1505,7 @@
           japaneseGroup[cssIndex].classList.remove('japaneseNoDisplay');
 
         }
-        if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'F' || questions[cssIndex][idxPattern] === 'G') {
+        if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'F' || questions[cssIndex][idxPattern] === 'G' || questions[cssIndex][idxPattern] === 'W' || questions[cssIndex][idxPattern] === 'X') {
           const inputGroup = document.querySelectorAll('.input');
           let inputHanyu = inputGroup[cssIndex];
           //
@@ -1407,6 +1518,29 @@
 
             }
             speakData(comment);
+
+
+          } else if (questions[cssIndex][idxPattern] === 'W') {
+
+            if (patternW_Judge(inputHanyu.value, cssIndex)) {
+              seikaiSu++;
+              comment.textContent = '好！赞👍';
+            } else {
+              comment.textContent = '错×　再加油！！';
+
+            }
+            speakData(comment);
+          } else if (questions[cssIndex][idxPattern] === 'X') {
+
+            if (patternX_Judge(inputHanyu.value, cssIndex)) {
+              seikaiSu++;
+              comment.textContent = '好！赞👍';
+            } else {
+              comment.textContent = '错×　再加油！！';
+
+            }
+            speakData(comment);
+
 
           } else if (questions[cssIndex][idxPattern] === 'C' || questions[cssIndex][idxPattern] === 'G') {
             if (patternCorG_Judge(inputHanyu.value, cssIndex)) {
@@ -1467,234 +1601,311 @@
 
           }
           console.log(answerString);
-         
-          
-            let correctAnswer;
-            if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q'　|| questions[cssIndex][idxPattern] === 'R' || questions[cssIndex][idxPattern] === 'T'  || questions[cssIndex][idxPattern] === 'N') {
-              
-              saveQuestions = structuredClone(sheetDatas[sheetIndex2 + 1]);
-              correctAnswer = saveQuestions[cssIndex][5];
-             
-            
-            } else if (questions[cssIndex][idxPattern] === 'E') {
-              correctAnswer = pinyin;
 
-            } else {
-              correctAnswer = hanyu.split('/');
-            }
-            console.log(`correctAnswer=${correctAnswer}`);
-            console.log(`answerString=${answerString}`);
-            // if (answerString === correctAnswer) {
-            if (answerString.trim() !== '' && correctAnswer.includes(answerString)) {
-              comment.textContent = '好！赞👍';
-              seikaiSu++;
-              console.log('OK');
-            } else {
-              comment.textContent = '错×　再加油！！';
-              console.log('wrong');
-            }
-            speakData(comment);
-          }
-          //
-        }
 
-      }
-      // Nパターン　判定
-      // hanyuParts1の叔父列の中の'()'をanswerStringで置き換えたい
-      function patternNCheck(answerString, hanyu) {
-        
-        let hanyuParts = hanyu.split('/');
-        let hanyuParts1 = hanyuParts[0];
-        let hanyuParts2 = hanyuParts[1];
-        
-        // Replace '()' with answerString in hanyuParts1
-        let hanyuParts3 = hanyuParts1.replace('()', answerString);
-        console.log(`hanyuParts2=${hanyuParts2}`);
-        console.log(`hanyuParts3=${hanyuParts3}`);
-        
-          if (hanyuParts2 === hanyuParts3) {
-            return true;
-           
+          let correctAnswer;
+          if (questions[cssIndex][idxPattern] === 'O' || questions[cssIndex][idxPattern] === 'P' || questions[cssIndex][idxPattern] === 'Q' || questions[cssIndex][idxPattern] === 'R' || questions[cssIndex][idxPattern] === 'T' || questions[cssIndex][idxPattern] === 'N') {
+
+            saveQuestions = structuredClone(sheetDatas[sheetIndex2 + 1]);
+            correctAnswer = saveQuestions[cssIndex][5];
+
+
+          } else if (questions[cssIndex][idxPattern] === 'E') {
+            correctAnswer = pinyin;
+
           } else {
-            return false;
+            correctAnswer = hanyu.split('/');
           }
-        }
-       
-      
-      // Lパターン　判定
-      function lPaternJudge(hAnswer, cssIndex) {
-        recognition.stop();
-
-        let matchOn = false;
-        let lKaitou1;
-        let lKaitou2;
-        for (let i = idxSpan; i < questions[cssIndex].length; i++) {
-          if (questions[cssIndex][i] !== '') {
-            console.log(`Lパターン　hAnswer=${hAnswer}`);
-
-            [lKaitou1, lKaitou2] = bunkaiLKaitou(questions[cssIndex][i])
-            let wHanyu;
-            let wHanswer;
-            [wHanyu, wHanswer] = hanyuHosei(lKaitou1, hAnswer)
-            console.log(`Lパターン　F列=${lKaitou1}`);
-            if (wHanyu === wHanswer) {
-              matchOn = true;
-              break;
-
-            }
-
+          console.log(`correctAnswer=${correctAnswer}`);
+          console.log(`answerString=${answerString}`);
+          // if (answerString === correctAnswer) {
+          if (answerString.trim() !== '' && correctAnswer.includes(answerString)) {
+            comment.textContent = '好！赞👍';
+            seikaiSu++;
+            console.log('OK');
+          } else {
+            comment.textContent = '错×　再加油！！';
+            console.log('wrong');
           }
-        }
-
-        if (matchOn) {
-          seikaiSu++;
-          comment.textContent = lKaitou2;
           speakData(comment);
-
-
-
-        } else {
-          comment.textContent = '你的回答不一样。';
-
-          speakData(comment);
-
         }
-
-
-
-
-      }
-      // Hパターン　？　。補正
-      function hanyuHosei(hanyu, hAnswer) {
-        console.log(`hanyu=${hanyu}`);
-        console.log(`hAnswer=${hAnswer}`);
-        let whanyu = hanyu;
-
-        let whAnswer = hAnswer;
-
-        let whanyu1 = whanyu.split(cstKanma);
-        let whanyu2 = whanyu1.join('');
-
-        let whanyu3 = whanyu2.split(constWenhao);
-        let whanyu4 = whanyu3.join('');
-
-        let whanyu5 = whanyu4.split(constKuten);
-        whanyu = whanyu5.join('');
         //
-        let whAnswer1 = whAnswer.split(cstKanma);
-        let whAnswer2 = whAnswer1.join('');
-
-        let whAnswer3 = whAnswer2.split(constWenhao);
-        let whAnswer4 = whAnswer3.join('');
-
-        let whAnswer5 = whAnswer4.split(constKuten);
-        whAnswer = whAnswer5.join('');
-
-
-        return [whanyu, whAnswer];
-
-
       }
-      // 
-      function pattertnF_Judge(inputHanyu, cssIndex) {
-        let matchOn = true;
-        let hanyu = questions[cssIndex][idxHanyu];
-        if (inputHanyu === hanyu) {
-          return matchOn;
-        }
-        matchOn = false;
-        for (let i = idxSpan; i < questions[cssIndex].length; i++) {
-          if (questions[cssIndex][i] !== '') {
-            if (inputHanyu === questions[cssIndex][i]) {
-              matchOn = true;
-              return matchOn;
+
+    }
+    // Nパターン　判定
+    // hanyuParts1の叔父列の中の'()'をanswerStringで置き換えたい
+    function patternNCheck(answerString, hanyu) {
+
+      let hanyuParts = hanyu.split('/');
+      let hanyuParts1 = hanyuParts[0];
+      let hanyuParts2 = hanyuParts[1];
+
+      // Replace '()' with answerString in hanyuParts1
+      let hanyuParts3 = hanyuParts1.replace('()', answerString);
+      console.log(`hanyuParts2=${hanyuParts2}`);
+      console.log(`hanyuParts3=${hanyuParts3}`);
+
+      if (hanyuParts2 === hanyuParts3) {
+        return true;
+
+      } else {
+        return false;
+      }
+    }
 
 
-            }
+    // Lパターン　判定
+    function lPaternJudge(hAnswer, cssIndex) {
+      recognition.stop();
+
+      let matchOn = false;
+      let lKaitou1;
+      let lKaitou2;
+      for (let i = idxSpan; i < questions[cssIndex].length; i++) {
+        if (questions[cssIndex][i] !== '') {
+          console.log(`Lパターン　hAnswer=${hAnswer}`);
+
+          [lKaitou1, lKaitou2] = bunkaiLKaitou(questions[cssIndex][i])
+          let wHanyu;
+          let wHanswer;
+          [wHanyu, wHanswer] = hanyuHosei(lKaitou1, hAnswer)
+          console.log(`Lパターン　F列=${lKaitou1}`);
+          if (wHanyu === wHanswer) {
+            matchOn = true;
+            break;
 
           }
+
         }
-        matchOn = false;
+      }
+
+      if (matchOn) {
+        seikaiSu++;
+        comment.textContent = lKaitou2;
+        speakData(comment);
+
+
+
+      } else {
+        comment.textContent = '你的回答不一样。';
+
+        speakData(comment);
+
+      }
+
+
+
+
+    }
+    // Hパターン　？　。補正
+    function hanyuHosei(hanyu, hAnswer) {
+      console.log(`hanyu=${hanyu}`);
+      console.log(`hAnswer=${hAnswer}`);
+      let whanyu = hanyu;
+
+      let whAnswer = hAnswer;
+
+      let whanyu1 = whanyu.split(cstKanma);
+      let whanyu2 = whanyu1.join('');
+
+      let whanyu3 = whanyu2.split(constWenhao);
+      let whanyu4 = whanyu3.join('');
+
+      let whanyu5 = whanyu4.split(constKuten);
+      whanyu = whanyu5.join('');
+      //
+      let whAnswer1 = whAnswer.split(cstKanma);
+      let whAnswer2 = whAnswer1.join('');
+
+      let whAnswer3 = whAnswer2.split(constWenhao);
+      let whAnswer4 = whAnswer3.join('');
+
+      let whAnswer5 = whAnswer4.split(constKuten);
+      whAnswer = whAnswer5.join('');
+
+
+      return [whanyu, whAnswer];
+
+
+    }
+    // 
+    function pattertnF_Judge(inputHanyu, cssIndex) {
+      let matchOn = true;
+      let hanyu = questions[cssIndex][idxHanyu];
+      if (inputHanyu === hanyu) {
         return matchOn;
       }
-      // 
-      function patternCorG_Judge(inputHanyu, cssIndex) {
-        const hanyu = questions[cssIndex][idxHanyu];
-        const hanyuParts = hanyu.split('/');
+      matchOn = false;
+      for (let i = idxSpan; i < questions[cssIndex].length; i++) {
+        if (questions[cssIndex][i] !== '') {
+          if (inputHanyu === questions[cssIndex][i]) {
+            matchOn = true;
+            return matchOn;
 
-        return hanyuParts.includes(inputHanyu);
-      }
-      //
-      function setReTry() {
-        const totalGrade = document.querySelector('.totalGrade');
-        totalGrade.classList.add('totalGradeNoDisplay');
-        totalGrade.classList.remove('totalGradeDisplay');
-        container.remove();
-        container = document.createElement('div');
-        container.setAttribute('id', 'container');
-        main.appendChild(container);
 
-        renderQuestions(questions);
-        iniCSSSet();
-        cssIndex = 0;
-        swButton = false;
+          }
 
-      }
-      //
-      function spanSortable() {
-        if (osAndroid) {
-          return;
         }
-        let answerGroup = document.querySelectorAll('.answer');;
-        let questionGroup = document.querySelectorAll('.question');;
-        let answerSpans = answerGroup[cssIndex];
-        let questionSpans = questionGroup[cssIndex];
-        new Sortable(answerSpans, {
-          group: 'shared', // set both lists to same group
-          animation: 150
-        });
-
-        new Sortable(questionSpans, {
-          group: 'shared',
-          animation: 150
-        });
-
-
       }
+      matchOn = false;
+      return matchOn;
+    }
+    //  パターンW　判定
+    function patternW_Judge(inputHanyu, cssIndex) {
+      let wTangGroup = questions[cssIndex][idxSpan];
+      let wTangos = wTangGroup.split('/');
+      let wTango = wTangos[0];
+      let hanyuHosei = questions[cssIndex][idxHanyu].replaceAll('()', wTango);
+      let hanyuArray = hanyuHosei.split('/');
+      let firstHanyu = hanyuArray.shift();
+      const processedInputHanyu = preprocessString(inputHanyu);
 
+      console.log(`inputHanyu (元): '${inputHanyu}'`);
+      console.log(`inputHanyu (処理後): '${processedInputHanyu}' (長さ: ${processedInputHanyu.length})`);
 
+      for (let i = 0; i < hanyuArray.length; i++) {
+        const originalHanyuItem = hanyuArray[i];
+        const processedHanyuItem = preprocessString(originalHanyuItem);
 
+        console.log(`hanyuArray[${i}] (元): '${originalHanyuItem}'`);
+        console.log(`hanyuArray[${i}] (処理後): '${processedHanyuItem}' (長さ: ${processedHanyuItem.length})`);
 
-      // イニシャル　書くシート用のCSS セット　　最初の問題に移る
-      function iniCSSSet() {
-        cssIndex = 0;
-        var classElement = document.getElementsByClassName('dataContent');
-        classElement[0].classList.add("dataDisplay");
-        if (classElement[0].classList.contains('dataNone')) {
-          classElement[i].classList.remove('dataNone');
+        if (processedHanyuItem === processedInputHanyu) {
+          return true;
         }
-        for (let i = 1; i < classElement.length; i++) {
-          classElement[i].classList.add("dataNone");
-        }
-        spanSortable();
-
-
       }
-      // イニシャル　書くシート用のCSS セット　　最初の問題に移る
-      function iniCSSSet2() {
-        cssIndex = 0;
-        var classElement = document.getElementsByClassName('dataContent');
+      return false;
+    }
 
-        for (let i = 0; i < classElement.length; i++) {
-          classElement[i].classList.add("dataNone");
-          if (classElement[i].classList.contains('ditaDisplay')) {
-            classElement[i].classElement.remove('dataDisplay');
+    //  パターンX　判定
+    function patternX_Judge(inputHanyu, cssIndex) {
+      let sw = false;
+      const processedInputHanyu = preprocessString(inputHanyu);
+
+      console.log(`inputHanyu (元): '${inputHanyu}'`);
+      console.log(`inputHanyu (処理後): '${processedInputHanyu}' (長さ: ${processedInputHanyu.length})`);
+
+      let wHanyuGroup = questions[cssIndex][idxHanyu];
+      let wAnswers = wHanyuGroup.split('/');
+      // wAnswersGroupには()付きの答えが配列として保存される。
+      let wAnswersGroup = wAnswers.shift();
+
+      for (let i = 0; i < wAnswers.length; i++) {
+        let wAnswerSave = wAnswers[i];
+        if (sw === true) break;
+        for (let j = idxSpan; j < questions[cssIndex].length; j++) {
+          let wTangGroup = questions[cssIndex][j];
+          let wTangos = wTangGroup.split('/');
+          let wTango = wTangos[0];
+          let wHoseiAnswer = wAnswerSave.replaceAll('()', wTango);
+          const processedHoseiAnswer = preprocessString(wHoseiAnswer);
+
+
+          console.log(`比較直前:`);
+          console.log(`wHoseiAnswer: '${wHoseiAnswer}' (長さ: ${wHoseiAnswer.length})`);
+          // console.log(`inputHanyu:   '${inputHanyu}' (長さ: ${inputHanyu.length})`);
+          // 文字コードを比較するのも有効です
+          console.log('wHoseiAnswer Chars:', wHoseiAnswer.split('').map(c => c.charCodeAt(0)));
+          console.log('inputHanyu Chars:', inputHanyu.split('').map(c => c.charCodeAt(0)));
+
+          if (processedHoseiAnswer == processedInputHanyu) {
+            sw = true;
+            break;
           }
         }
-        spanSortable();
-
-
       }
+      return sw
+    }
+    // 比較前に文字列を前処理するヘルパー関数
+    function preprocessString(str) {
+      let processedStr = str.trim(); // まず前後の空白を削除
+      const lastChar = processedStr.slice(-1);
+      // 文末の句点（。）、全角疑問符（？）、半角疑問符（?）を削除
+      if (lastChar === '。' || lastChar === '？' || lastChar === '?') {
+        processedStr = processedStr.slice(0, -1);
+      }
+      // 記号削除後に再度trimして、"你好。 "のようなケースに対応
+      return processedStr.trim();
+    }
+    // 
+    function patternCorG_Judge(inputHanyu, cssIndex) {
+      const hanyu = questions[cssIndex][idxHanyu];
+      const hanyuParts = hanyu.split('/');
+
+      return hanyuParts.includes(inputHanyu);
+    }
+    //
+    function setReTry() {
+      const totalGrade = document.querySelector('.totalGrade');
+      totalGrade.classList.add('totalGradeNoDisplay');
+      totalGrade.classList.remove('totalGradeDisplay');
+      container.remove();
+      container = document.createElement('div');
+      container.setAttribute('id', 'container');
+      main.appendChild(container);
+      questions = structuredClone(sheetDatas[sheetIndex2 + 1]);
+      renderQuestions(questions);
+      iniCSSSet();
+      cssIndex = 0;
+      swButton = false;
+
+    }
+    //
+    function spanSortable() {
+      if (osAndroid) {
+        return;
+      }
+      let answerGroup = document.querySelectorAll('.answer');;
+      let questionGroup = document.querySelectorAll('.question');;
+      let answerSpans = answerGroup[cssIndex];
+      let questionSpans = questionGroup[cssIndex];
+      new Sortable(answerSpans, {
+        group: 'shared', // set both lists to same group
+        animation: 150
+      });
+
+      new Sortable(questionSpans, {
+        group: 'shared',
+        animation: 150
+      });
+
+
+    }
+
+
+
+
+    // イニシャル　書くシート用のCSS セット　　最初の問題に移る
+    function iniCSSSet() {
+      cssIndex = 0;
+      var classElement = document.getElementsByClassName('dataContent');
+      classElement[0].classList.add("dataDisplay");
+      if (classElement[0].classList.contains('dataNone')) {
+        classElement[i].classList.remove('dataNone');
+      }
+      for (let i = 1; i < classElement.length; i++) {
+        classElement[i].classList.add("dataNone");
+      }
+      spanSortable();
+
+
+    }
+    // イニシャル　書くシート用のCSS セット　　最初の問題に移る
+    function iniCSSSet2() {
+      cssIndex = 0;
+      var classElement = document.getElementsByClassName('dataContent');
+
+      for (let i = 0; i < classElement.length; i++) {
+        classElement[i].classList.add("dataNone");
+        if (classElement[i].classList.contains('ditaDisplay')) {
+          classElement[i].classElement.remove('dataDisplay');
+        }
+      }
+      spanSortable();
+
+
+    }
 
   </script>
 </body>
