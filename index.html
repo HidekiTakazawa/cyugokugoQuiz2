@@ -1732,14 +1732,24 @@
     // 
     function pattertnF_Judge(inputHanyu, cssIndex) {
       let matchOn = true;
+      
+      const processedInputHanyu = preprocessString(inputHanyu);
+
+      console.log(`inputHanyu (元): '${inputHanyu}'`);
+      console.log(`inputHanyu (処理後): '${processedInputHanyu}' (長さ: ${processedInputHanyu.length})`);
       let hanyu = questions[cssIndex][idxHanyu];
-      if (inputHanyu === hanyu) {
+      let processHanyu = preprocessString(hanyu);
+
+      console.log(`hanyu (元): '${hanyu}'`);
+      console.log(`hanyu (処理後): '${processHanyu}' (長さ: ${processHanyu.length})`);
+      if (processedInputHanyu === processHanyu) {
         return matchOn;
       }
+      
       matchOn = false;
       for (let i = idxSpan; i < questions[cssIndex].length; i++) {
         if (questions[cssIndex][i] !== '') {
-          if (inputHanyu === questions[cssIndex][i]) {
+          if (processedInputHanyu === preprocessString(questions[cssIndex][i])) {
             matchOn = true;
             return matchOn;
 
