@@ -1219,14 +1219,11 @@
     
         
     // タイプW　中国語の補正
+    // タイプW　中国語の補正
     function patternW_Hanyu_Hosei(question) {
-      // let cntTango = Math.floor(Math.random() * (question.length - idxSpan)) + 1;
-      let cntTango = Math.floor(Math.random() * (question.length - idxSpan));
-      console.log(`question.length=${question.length}`);
-      console.log(`idxSpan=${idxSpan}`);
-      console.log(`cntTango=${cntTango}`);
-      let selectTango = question[cntTango + idxSpan - 1];
-      console.log(`selectTango=${selectTango}`);
+      // 1. Find all variable placeholders in the question
+      const hanyuQuestion = question[idxHanyu].split('/')[0]; // Assuming question is the first part
+      const numPlaceholders = (hanyuQuestion.match(/\(\)/g) || []).length;
       // F列以降の空でない有効な選択肢を抽出
       const validOptions = [];
       for (let i = idxSpan; i < question.length; i++) {
@@ -1242,44 +1239,96 @@
         return;
       }
 
-      // 有効な選択肢の中からランダムに1つ選ぶ
-      const randomIndex = Math.floor(Math.random() * validOptions.length);
-      const selectedOptionRaw = validOptions[randomIndex];
 
-      console.log(`question.length (original)=${question.length}, idxSpan=${idxSpan}`);
-      console.log(`validOptions.length=${validOptions.length}, randomIndex=${randomIndex}`);
-      console.log(`Selected option (raw): ${selectedOptionRaw}`);
+      // const selectedOptionRaw = validOptions[randomIndex];
 
-      const cstSlash = "/";
-      // let wTangos = selectTango.split(cstSlash);
-      let wTangos = selectedOptionRaw.split(cstSlash);
-      let wTango = wTangos[0];
-      if (wTangos.length === 0 || wTangos[0].trim() === "") {
-          console.warn("選択された単語のパース結果が無効です:", selectedOptionRaw);
-          wTango = ""; // または適切なデフォルト値
+      // 2. Randomly select options for each placeholder
+      const selectedOptions = [];
+      for (let i = 0; i < numPlaceholders; i++) {
+        // Select a random word from the options (F column onwards)
+        // 有効な選択肢の中からランダムに1つ選ぶ
+        const randomIndex = Math.floor(Math.random() * validOptions.length);
+        // let cntTango = Math.floor(Math.random() * (question.length - idxSpan));
+        let selectedOptionRaw = validOptions.splice(randomIndex, 1)[0]; // 選択した要素を配列から削除
+
+        if (!selectedOptionRaw) {
+          console.warn(`パターンW: 選択肢が不足しています。プレースホルダー ${i + 1} の代替オプションを使用します。`);
+          selectedOptionRaw = "无/wú/なし"; // Provide a default option
+        }
+        // selectedOptionRaw = validOptions.splice(randomIndex, 1)[0]; // 選択した要素を配列から削除
+
+        const wTangos = selectedOptionRaw.split('/');
+
+        if (wTangos.length < 3 || wTangos[0].trim() === "" || wTangos[2].trim() === "") {
+          console.warn(`パターンW: 選択肢の形式が無効です: ${selectedOptionRaw}. プレースホルダー ${i + 1} の代替オプションを使用します。`);
+          selectedOptions.push(["无", "wú", "なし"]); // Provide a default option
+        } else {
+          selectedOptions.push(wTangos);
+        }
       }
+      let hanyuHairetsu = question[idxHanyu].split('/');
+      let hoseiHanyu = [];
+      
+      let hoseiHanyuQuestion = hanyuHairetsu[0];
 
-      let hanyuString = question[idxHanyu];
-      console.log(`hanyuString=${hanyuString}`);
-      console.log(`Original hanyuString for replacement: ${hanyuString}`);
-
-      let wHanyu2 = hanyuString.replaceAll('()', wTango);
-      console.log(`wHanyu2=${wHanyu2}`);
-      console.log(`Replaced hanyuString: ${wHanyu2}`);
-      question[idxHanyu] = wHanyu2;
-      // 日本語の変換
-      wTango = wTangos[2];
-      let jpSentence = question[idxRiyu];
-      console.log(`jpSentence=${jpSentence}`);
-      let jpSentence2 = jpSentence.replaceAll('()', wTango);
-      console.log(`jpSentence2=${jpSentence2}`);
-      question[idxRiyu] = jpSentence2;
+      for (let i = 0; i < numPlaceholders; i++) {
+        hoseiHanyuQuestion = hoseiHanyuQuestion.replace('()', selectedOptions[i][0]);
+      }
+      hoseiHanyu.push(hoseiHanyuQuestion);
 
 
 
+      for (let i = 1; i < hanyuHairetsu.length; i++) {
+        // let numAnswerPlaceholders = (hoseiAnswer.match(/\(\)/g) || []).length;
+        // 答えの選択肢の数()は一つに固定する。
+        if (hanyuHairetsu[i].includes('()')) {
+          for (let j = 0; j < selectedOptions.length; j++) {
+            let hoseiAnswer = hanyuHairetsu[i];
+            hoseiAnswer = hoseiAnswer.replace('()', selectedOptions[j][0]);
+            hoseiHanyu.push(hoseiAnswer);
+          }
+
+        } else {
+          hoseiHanyu.push(hanyuHairetsu[i]);
+        }
+      }
+      let hanyuString = hoseiHanyu.join('/');
+      question[idxHanyu] = hanyuString;
+      //  日本語の補正
+      let RiyuHairetsu = question[idxRiyu].split('/');
+      let hoseiRiyu = [];
+
+      let hoseiRiyuQuestion = RiyuHairetsu[0];
+
+      for (let i = 0; i < numPlaceholders; i++) {
+        hoseiRiyuQuestion = hoseiRiyuQuestion.replace('()', selectedOptions[i][2]);
+      }
+      hoseiRiyu.push(hoseiRiyuQuestion);
 
 
-     }
+
+      for (let i = 1; i < RiyuHairetsu.length; i++) {
+        // let numAnswerPlaceholders = (hoseiAnswer.match(/\(\)/g) || []).length;
+        // 答えの選択肢の数()は一つに固定する。
+        if (RiyuHairetsu[i].includes('()')) {
+          for (let j = 0; j < selectedOptions.length; j++) {
+            let hoseiAnswer = RiyuHairetsu[i];
+            hoseiAnswer = hoseiAnswer.replace('()', selectedOptions[j][2]);
+            hoseiRiyu.push(hoseiAnswer);
+          }
+
+        } else {
+          hoseiRiyu.push(RiyuHairetsu[i]);
+        }
+      }
+      let RiyuString = hoseiRiyu.join('/');
+      question[idxRiyu] = RiyuString;
+      //  
+
+
+
+    }
+
  
  
 
