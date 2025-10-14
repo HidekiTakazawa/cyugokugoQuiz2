@@ -355,7 +355,12 @@
     .statusNodisplay {
       display: none;
     }
-
+    .buttonInput {
+      display: none;
+    }
+     #buttonInputID {
+      display: none;
+    }
     .loading {
       position: fixed;
       top: 100px;
@@ -435,6 +440,7 @@
       </div>
     </div>
   </div>
+  <div id ="buttonInputID"></div>
   <div id="main">
     <div id="container">
 
@@ -459,6 +465,15 @@
       console.log(ua.indexOf("android"));
     }
     let kurukuru = document.getElementById('kurukuru');
+    let buttonInputID = document.getElementById('buttonInputID');
+    buttonInputID.addEventListener('click', (e) => {
+      e.preventDefault();
+      checkNext();
+
+
+
+    });
+
     // スプレッドシート　列　定数定義
     const idxNo = 0;
     const idxPattern = 1;
@@ -645,7 +660,7 @@
       let answerSpans = answerGroup[cssIndex];
       let questionSpans = questionGroup[cssIndex];
       // let sheetDatas;
-      if (quizPattern !== 'E') {
+      if (quizPattern !== 'E' && quizPattern !== 'C') {
         var uttr = new SpeechSynthesisUtterance(setHanyuBunkai(td.textContent));
         uttr.lang = "zh-CN"
         uttr.rate = speakSpeedRate();
@@ -669,7 +684,7 @@
 
 
       } else {
-        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P' || quizPattern === 'Q' || quizPattern === 'R' || quizPattern === 'S' || quizPattern === 'T' || quizPattern === 'W' || quizPattern === 'X') {
+        if (quizPattern === 'I' || quizPattern === 'J' || quizPattern === 'K' || quizPattern === 'M' || quizPattern === 'N' || quizPattern === 'O' || quizPattern === 'P' || quizPattern === 'Q' || quizPattern === 'R' || quizPattern === 'S' || quizPattern === 'T' || quizPattern === 'W' || quizPattern === 'X'  || quizPattern === 'D' || quizPattern === 'E') {
           console.log(answerSpans.children.length);
           if (answerSpans.children.length > 1) {
             questionSpans.appendChild(answerSpans.children[1]);
@@ -1140,8 +1155,17 @@
 
             }
             span.textContent = question[i];
-            span.setAttribute('onclick', 'speakDataX(this)')
-            span.setAttribute('onmousedown', 'speakData(this)')
+            // 2025-10-14  ピンインをクリックしたら音声出力しない。
+            if (question[idxPattern] === 'C' || question[idxPattern] === 'E') {
+              span.setAttribute('onclick', 'speakDataX(this)')
+            
+
+            } else {
+              span.setAttribute('onclick', 'speakDataX(this)')
+              
+              span.setAttribute('onmousedown', 'speakData(this)') 
+
+            }
             div.appendChild(span);
 
           }
@@ -1159,16 +1183,24 @@
 
       // 
       if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'W' || question[idxPattern] === 'X') {
+        let form;
+        form = document.createElement('form');
+        form.addEventListener('submit', (e) => {
+          e.preventDefault(); // フォームのデフォルトの送信動作をキャンセル
+          checkNext();        // checkNext関数を実行
+        });
+
         div = document.createElement('div');
         div.textContent = '中国語入力';
-        divContent.appendChild(div);
+        form.appendChild(div);
 
         input = document.createElement('input');
-
         input.setAttribute('class', 'input');
         input.setAttribute('maxlength', '40');
         input.setAttribute('size', '40');
-        div.appendChild(input);
+        form.appendChild(input);
+
+        divContent.appendChild(form);
         //
         div = document.createElement('div');
         div.setAttribute('class', 'statsu statusNodisplay');
