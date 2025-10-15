@@ -355,12 +355,7 @@
     .statusNodisplay {
       display: none;
     }
-    .buttonInput {
-      display: none;
-    }
-     #buttonInputID {
-      display: none;
-    }
+   
     .loading {
       position: fixed;
       top: 100px;
@@ -440,7 +435,7 @@
       </div>
     </div>
   </div>
-  <div id ="buttonInputID"></div>
+ 
   <div id="main">
     <div id="container">
 
@@ -465,15 +460,7 @@
       console.log(ua.indexOf("android"));
     }
     let kurukuru = document.getElementById('kurukuru');
-    let buttonInputID = document.getElementById('buttonInputID');
-    buttonInputID.addEventListener('click', (e) => {
-      e.preventDefault();
-      checkNext();
-
-
-
-    });
-
+   
     // スプレッドシート　列　定数定義
     const idxNo = 0;
     const idxPattern = 1;
