@@ -631,7 +631,17 @@
     }
     function speakDataNpatern(hanyuString) {
 
-      // if (param1 instanceof HTMLTableCellElement) {
+      // 2025-10-14
+      // 現在表示されている問題のコンテナ要素を取得
+      const classElement = document.getElementsByClassName('dataContent');
+      const currentQuestionElement = classElement[cssIndex];
+      // コンテナ要素の中からinput要素を検索
+      const currentInput = currentQuestionElement.querySelector('.inputForm');
+      // input要素が存在し、非表示でない場合にフォーカスする
+      if (currentInput) {
+        currentInput.focus();
+      }
+      // 2025-10-14
 
       var uttr = new SpeechSynthesisUtterance(hanyuString);
       uttr.lang = "zh-CN"
@@ -706,8 +716,17 @@
     }
     function speakData2() {
       let l = 1;
-      // if (param1 instanceof HTMLTableCellElement) {
-
+      // 2025-10-14
+      // 現在表示されている問題のコンテナ要素を取得
+      const classElement = document.getElementsByClassName('dataContent');
+      const currentQuestionElement = classElement[cssIndex];
+      // コンテナ要素の中からinput要素を検索
+      const currentInput = currentQuestionElement.querySelector('.inputForm');
+      // input要素が存在し、非表示でない場合にフォーカスする
+      if (currentInput) {
+        currentInput.focus();
+      }
+      // 2025-10-14
       const hanyuWords = setHanyuBunkai(questions[cssIndex][idxHanyu]);
       var uttr = new SpeechSynthesisUtterance(hanyuWords);
       uttr.lang = "zh-CN"
@@ -1183,6 +1202,7 @@
 
       // 
       if (question[idxPattern] === 'C' || question[idxPattern] === 'F' || question[idxPattern] === 'G' || question[idxPattern] === 'W' || question[idxPattern] === 'X') {
+        // 入力後エンターキーでチェックに入るための変更 2025-10-15
         let form;
         form = document.createElement('form');
         form.addEventListener('submit', (e) => {
@@ -1195,12 +1215,13 @@
         form.appendChild(div);
 
         input = document.createElement('input');
-        input.setAttribute('class', 'input');
+        input.setAttribute('class', 'inputForm input');
         input.setAttribute('maxlength', '40');
         input.setAttribute('size', '40');
         form.appendChild(input);
 
         divContent.appendChild(form);
+        // 入力後エンターキーでチェックに入るための変更 2025-10-15
         //
         div = document.createElement('div');
         div.setAttribute('class', 'statsu statusNodisplay');
@@ -1502,6 +1523,14 @@
           if (i === cssIndex) {
             classElement[i].classList.add("dataDisplay");
             classElement[i].classList.remove("dataNone");
+            // 2025-10-14
+            // 表示された問題のinput要素にフォーカスを当てる
+            const currentInput = classElement[i].querySelector('.inputForm');
+            // input要素が存在し、非表示でない場合にフォーカスする
+            if (currentInput) {
+              currentInput.focus();
+            }
+            // 2025-10-14
 
           } else {
             classElement[i].classList.add("dataNone");
@@ -1975,6 +2004,14 @@
       if (classElement[0].classList.contains('dataNone')) {
         classElement[i].classList.remove('dataNone');
       }
+      // 最初の問題のinput要素にフォーカスを当てる 2025-10-15
+      const firstInput = classElement[0].querySelector('.inputForm');
+      // input要素が存在し、非表示でない場合にフォーカスする
+     
+      if (firstInput) {
+        firstInput.focus();
+      }
+      // 最初の問題のinput要素にフォーカスを当てる 2025-10-15
       for (let i = 1; i < classElement.length; i++) {
         classElement[i].classList.add("dataNone");
       }
