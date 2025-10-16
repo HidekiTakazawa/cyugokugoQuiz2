@@ -598,7 +598,8 @@
       // if (param1 instanceof HTMLTableCellElement) {
       const td = param1;
 
-      var uttr = new SpeechSynthesisUtterance(td.textContent);
+      // var uttr = new SpeechSynthesisUtterance(td.textContent);
+      var uttr = new SpeechSynthesisUtterance(setHanyuBunkai(td.textContent));
       uttr.lang = "zh-CN"
       uttr.rate = speakSpeedRate();
       // 利用可能な音声を確認
@@ -649,6 +650,17 @@
 
     }
     function speakDataX(param1, param2) {
+      // 2025-10-16
+      // 現在表示されている問題のコンテナ要素を取得
+      const classElement = document.getElementsByClassName('dataContent');
+      const currentQuestionElement = classElement[cssIndex];
+      // コンテナ要素の中からinput要素を検索
+      const currentInput = currentQuestionElement.querySelector('.inputForm');
+      // input要素が存在し、非表示でない場合にフォーカスする
+      if (currentInput) {
+        currentInput.focus();
+      }
+      // 2025-10-16
 
       const quizPattern = questions[cssIndex][idxPattern];
       const td = param1;
