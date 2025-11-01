@@ -7,24 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>中国語クイズ</title>
   <style>
-    #container {
-      position: relative;
-      z-index: 1;
-    }
-    #container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: contain;
-      opacity: 0.1;
-      z-index: -1;
-    }
-
     * {
       font-size: 20px;
     }
@@ -38,8 +20,21 @@
       background-color: lemonchiffon;
       width: 100%;
 
-
     }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      opacity: 0.5;
+      z-index: -1;
+    }
+
 
     .header p {
       padding-left: 100px;
@@ -2017,6 +2012,7 @@
 
     // イニシャル　書くシート用のCSS セット　　最初の問題に移る
     function iniCSSSet() {
+      setRandomBackgroundImage();
       cssIndex = 0;
       var classElement = document.getElementsByClassName('dataContent');
       classElement[0].classList.add("dataDisplay");
@@ -2040,6 +2036,7 @@
     }
     // イニシャル　書くシート用のCSS セット　　最初の問題に移る
     function iniCSSSet2() {
+      setRandomBackgroundImage();
       cssIndex = 0;
       var classElement = document.getElementsByClassName('dataContent');
 
@@ -2059,7 +2056,7 @@
       const randomIndex = Math.floor(Math.random() * images.length);
       const selectedImage = images[randomIndex];
       const style = document.createElement('style');
-      style.textContent = `#container::before { background-image: url('${selectedImage}'); }`;
+      style.textContent = `.header::before { background-image: url('${selectedImage}'); }`;
       document.head.appendChild(style);
     }
     setRandomBackgroundImage();
